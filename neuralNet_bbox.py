@@ -23,7 +23,15 @@ x_train, x_val, y_train, y_val = train_test_split(binary_inputs, output, test_si
 
 # Define the model architecture
 model = Sequential()
-model.add(Dense(32, activation='relu', input_dim=binary_inputs.shape[1]))
+
+# Add the first layer with input dimension
+model.add(Dense(64, activation='relu', input_dim=binary_inputs.shape[1]))
+
+# Add 10 hidden layers
+for _ in range(10):
+    model.add(Dense(64, activation='relu'))
+
+# Add the final output layer
 model.add(Dense(1, activation='linear'))
 
 # Compile the model
