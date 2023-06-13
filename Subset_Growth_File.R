@@ -10,7 +10,8 @@ dat <- fread("../CreativityHub_NNetworks/Costanzo2016_GeneticInteractions.csv")
 dat <- dat[,c(1,7,12,13)]
 
 #Rename columns for simpler processing downstream
-setnames(dat, old = c('Gene Primary DBID','Gene 2 Primary Identifier') ,new = c('Gene1','Gene2'))
+setnames(dat, old = c('Gene Primary DBID','Gene 2 Primary Identifier') ,
+         new = c('Gene1','Gene2'))
 
 #Clean data of missing values
 dat <- na.omit(dat)
@@ -31,7 +32,9 @@ epsilon <- 1e-10
 adjusted_pvalues <- pmax(dat$Pvalue, epsilon)
 
 # Calculate the weighted average Pvalue for each gene pair
-weighted_pvalue <- tapply(dat$Pvalue * adjusted_pvalues, dat$gene_pair, sum) / tapply(adjusted_pvalues, dat$gene_pair, sum)
+weighted_pvalue <- tapply(dat$Pvalue * adjusted_pvalues,
+                          dat$gene_pair, sum) / tapply(adjusted_pvalues, 
+                                                       dat$gene_pair, sum)
 
 # Create a new condensed data table with gene pairs, aggregated growth scores, and weighted average p-values
 condensed_data <- data.table(
@@ -40,7 +43,8 @@ condensed_data <- data.table(
   weighted_average_pvalue = weighted_pvalue
 )
 
-condensed_data <- separate(condensed_data, gene_pair, into = c("Gene1", "Gene2"), sep = "_")
+condensed_data <- separate(condensed_data, gene_pair, 
+                           into = c("Gene1", "Gene2"), sep = "_")
 
 #Write to new table
-write.csv(condensed_data, file = "GenePair_GrowthRate_Costanzo2016.csv",row.names = F)
+write.csv(condensed_data, file = "GenePair_GrowthRate_v2_Costanzo2016.csv",row.names = F)
