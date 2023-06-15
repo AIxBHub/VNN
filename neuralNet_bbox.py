@@ -50,8 +50,23 @@ model.add(Dense(1, activation='linear'))
 # Compile the model
 model.compile(optimizer='adam', loss='mean_squared_error')
 
+# Perform cross-validation
+num_folds = 10  # Number of cross-validation folds
+scores = cross_val_score(model, binary_inputs, output, cv=num_folds, scoring='neg_mean_squared_error')
+
+# Print scores
+print("Cross-validation scores:")
+print(scores)
+
+# Calculate mean and standard deviation of the scores
+mean_score = -np.mean(scores)
+std_score = np.std(scores)
+
+print(f"Mean score: {mean_score:.4f}")
+print(f"Standard deviation: {std_score:.4f}")
+
 # Train the model
-history = model.fit(x_train, y_train, batch_size=10000, epochs=10, validation_data=(x_val, y_val))
+history = model.fit(x_train, y_train, batch_size=100000, epochs=100, validation_data=(x_val, y_val))
 
 # Evaluate the model
 score = model.evaluate(x_val, y_val)
