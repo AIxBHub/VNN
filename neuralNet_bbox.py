@@ -21,6 +21,9 @@ for chunk in data_chunks:
 # Concatenate all chunks into a single DataFrame
 df = pd.concat(df_list, ignore_index=True)
 
+num_rows, num_columns = df.shape
+print("Number of rows:", num_rows)
+print("Number of columns:", num_columns)
 
 # Sample data
 # df = data.sample(n = 50)
@@ -29,7 +32,10 @@ inputs = df[['Query Strain ID', 'Array Strain ID']]
 output = df['Genetic interaction score (ε)']
 
 # Convert gene pairs to binary vectors
-binary_inputs = pd.get_dummies(inputs.astype(str), prefix='', prefix_sep='')
+binary_mat = pd.get_dummies(inputs.astype(str), prefix='', prefix_sep='')
+
+# Randomize the rows of the binary_mat DataFrame
+binary_inputs = binary_mat.sample(frac=1, random_state=42)
 
 # Split the data into training and validation sets
 x_train, x_val, y_train, y_val = train_test_split(binary_inputs, output, test_size=0.2)
@@ -74,10 +80,21 @@ score = model.evaluate(x_val, y_val)
 # Save model
 model.save('rawData_NxN_batch10k_132neurons_12layers.h5')
 
+# Plot the scores
+plt.figure(figsize=(8, 6))
+plt.plot(range(1, num_folds + 1), -scores, marker='o', linestyle='-', color='blue')
+plt.xlabel('Fold')
+plt.ylabel('Negative Mean Squared Error')
+plt.title('Cross-Validation Scores')
+plt.grid(True)
+
+# Save the plot as an image file
+plt.savefig('cross_validation_scores.png')
+
 #Print plot of model loss
 plt.plot(history.history['loss'], label='Training Loss')
 plt.plot(history.history['val_loss'], label='Validation Loss')
 plt.legend()
 plt.show()
 #Save the plot to a file
-plt.savefig('rawData_NxN_10k_132neurons_12layers_plot.png')
+plt.savefig('rawData_NxN_100k_100Epoch_132neurons_12layers_plot.png')
