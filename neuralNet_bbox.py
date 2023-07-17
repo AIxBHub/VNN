@@ -68,8 +68,8 @@ model.compile(optimizer='adam', loss='mean_squared_error')
 # mean_score = -np.mean(scores)
 # std_score = np.std(scores)
 
-print(f"Mean score: {mean_score:.4f}")
-print(f"Standard deviation: {std_score:.4f}")
+# print(f"Mean score: {mean_score:.4f}")
+# print(f"Standard deviation: {std_score:.4f}")
 
 # Train the model
 history = model.fit(x_train, y_train, batch_size=100000, epochs=100, validation_data=(x_val, y_val))
