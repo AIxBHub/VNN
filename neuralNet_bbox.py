@@ -57,16 +57,16 @@ model.add(Dense(1, activation='linear'))
 model.compile(optimizer='adam', loss='mean_squared_error')
 
 # Perform cross-validation
-num_folds = 10  # Number of cross-validation folds
-scores = cross_val_score(model, binary_inputs, output, cv=num_folds, scoring='neg_mean_squared_error')
-
-# Print scores
-print("Cross-validation scores:")
-print(scores)
-
-# Calculate mean and standard deviation of the scores
-mean_score = -np.mean(scores)
-std_score = np.std(scores)
+# num_folds = 10  # Number of cross-validation folds
+# scores = cross_val_score(model, binary_inputs, output, cv=num_folds, scoring='neg_mean_squared_error')
+# 
+# # Print scores
+# print("Cross-validation scores:")
+# print(scores)
+# 
+# # Calculate mean and standard deviation of the scores
+# mean_score = -np.mean(scores)
+# std_score = np.std(scores)
 
 print(f"Mean score: {mean_score:.4f}")
 print(f"Standard deviation: {std_score:.4f}")
@@ -78,18 +78,18 @@ history = model.fit(x_train, y_train, batch_size=100000, epochs=100, validation_
 score = model.evaluate(x_val, y_val)
 
 # Save model
-model.save('rawData_NxN_batch10k_132neurons_12layers.h5')
+model.save('rawData_NxN_batch10k_500neurons_12layers.h5')
 
 # Plot the scores
-plt.figure(figsize=(8, 6))
-plt.plot(range(1, num_folds + 1), -scores, marker='o', linestyle='-', color='blue')
-plt.xlabel('Fold')
-plt.ylabel('Negative Mean Squared Error')
-plt.title('Cross-Validation Scores')
-plt.grid(True)
+# plt.figure(figsize=(8, 6))
+# plt.plot(range(1, num_folds + 1), -scores, marker='o', linestyle='-', color='blue')
+# plt.xlabel('Fold')
+# plt.ylabel('Negative Mean Squared Error')
+# plt.title('Cross-Validation Scores')
+# plt.grid(True)
 
 # Save the plot as an image file
-plt.savefig('cross_validation_scores.png')
+# plt.savefig('cross_validation_scores.png')
 
 #Print plot of model loss
 plt.plot(history.history['loss'], label='Training Loss')
