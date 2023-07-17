@@ -32,7 +32,7 @@ inputs = df[['Query_allele', 'Array_allele']]
 output = df['aggregated_growth_score']
 
 # Convert gene pairs to binary vectors
-binary_mat = pd.get_dummies(inputs.astype(str), prefix='', prefix_sep='')
+binary_mat = pd.get_dummies(inputs.astype(str))
 
 # Randomize the rows of the binary_mat DataFrame
 binary_inputs = binary_mat.sample(frac=1, random_state=42)
