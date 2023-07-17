@@ -5,13 +5,13 @@ library(tidyr)
 BiocManager::install("ctc")
 
 library(data.table)
-s1 <- fread("~/Desktop/RENCI/CreativityHub_NNetworks/Data File S1. Raw genetic interaction datasets: Pair-wise interaction format/SGA_DAmP.txt")
+s1 <- fread("Data File S1. Raw genetic interaction datasets: Pair-wise interaction format/SGA_DAmP.txt")
 
-s1_2 <- fread("~/Desktop/RENCI/CreativityHub_NNetworks/Data File S1. Raw genetic interaction datasets: Pair-wise interaction format/SGA_ExE.txt")
+s1_2 <- fread("Data File S1. Raw genetic interaction datasets: Pair-wise interaction format/SGA_ExE.txt")
 
-s1_3 <- fread("~/Desktop/RENCI/CreativityHub_NNetworks/Data File S1. Raw genetic interaction datasets: Pair-wise interaction format/SGA_ExN_NxE.txt")
+s1_3 <- fread("Data File S1. Raw genetic interaction datasets: Pair-wise interaction format/SGA_ExN_NxE.txt")
 
-s1_4 <- fread("~/Desktop/RENCI/CreativityHub_NNetworks/Data File S1. Raw genetic interaction datasets: Pair-wise interaction format/SGA_NxN.txt")
+s1_4 <- fread("Data File S1. Raw genetic interaction datasets: Pair-wise interaction format/SGA_NxN.txt")
 
 
 
@@ -60,3 +60,5 @@ condensed_data <- data.table(
 
 condensed_data <- separate(condensed_data, allele_pair, 
                            into = c("Query_allele", "Array_allele"), sep = "_")
+
+write.csv(condensed_data, "yeastRawData_StrainID_aggregateGrowth_weightedPval.csv",sep = ",")
