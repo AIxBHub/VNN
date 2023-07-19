@@ -5,11 +5,11 @@ library(tidyr)
 BiocManager::install("ctc")
 
 library(data.table)
-s1 <- fread("Data File S1. Raw genetic interaction datasets: Pair-wise interaction format/SGA_DAmP.txt")
-
-s1_2 <- fread("Data File S1. Raw genetic interaction datasets: Pair-wise interaction format/SGA_ExE.txt")
-
-s1_3 <- fread("Data File S1. Raw genetic interaction datasets: Pair-wise interaction format/SGA_ExN_NxE.txt")
+# s1 <- fread("Data File S1. Raw genetic interaction datasets: Pair-wise interaction format/SGA_DAmP.txt")
+# 
+# s1_2 <- fread("Data File S1. Raw genetic interaction datasets: Pair-wise interaction format/SGA_ExE.txt")
+# 
+# s1_3 <- fread("Data File S1. Raw genetic interaction datasets: Pair-wise interaction format/SGA_ExN_NxE.txt")
 
 s1_4 <- fread("Data File S1. Raw genetic interaction datasets: Pair-wise interaction format/SGA_NxN.txt")
 
@@ -37,7 +37,7 @@ allele_pair_counts <- table(dat$allele_pair)
 dim(allele_pair_counts[allele_pair_counts > 1])
 
 # Aggregate the growth score for each gene pair
-aggregated_growth <- aggregate(dat$`Double mutant fitness`, by = list(dat$allele_pair), FUN = sum)
+aggregated_growth <- aggregate(dat$`Double mutant fitness`, by = list(dat$allele_pair), FUN = mean)
 
 # Calculate the weights based on the p-values
 weights <- 1 / dat$`P-value`
