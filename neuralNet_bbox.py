@@ -78,7 +78,7 @@ model.compile(optimizer='adam', loss='mean_squared_error')
 # print(f"Standard deviation: {std_score:.4f}")
 
 # Train the model
-history = model.fit(x_train, y_train, batch_size=64, epochs=100, validation_data=(x_val, y_val))
+history = model.fit(x_train, y_train, batch_size=10000, epochs=300, validation_data=(x_val, y_val))
 
 # Evaluate the model
 score = model.evaluate(x_val, y_val)
