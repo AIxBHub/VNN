@@ -31,11 +31,17 @@ print("Number of columns:", num_columns)
 inputs = df[['Query_allele', 'Array_allele']]
 output = df['aggregated_growth_score']
 
+# delete dataframe
+del df
+
 # Convert gene pairs to binary vectors
 binary_mat = pd.get_dummies(inputs.astype(str))
 
 # Randomize the rows of the binary_mat DataFrame
 binary_inputs = binary_mat.sample(frac=1, random_state=42)
+
+# delete binary matrix
+del binary_mat
 
 # Split the data into training and validation sets
 x_train, x_val, y_train, y_val = train_test_split(binary_inputs, output, test_size=0.2)
