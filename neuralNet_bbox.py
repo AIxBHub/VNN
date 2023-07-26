@@ -115,7 +115,7 @@ history = model.fit(x_train, y_train, batch_size=10000, epochs=300, validation_d
 score = model.evaluate(x_val, y_val)
 
 # Save model
-model.save('rawData_NxN_batch10k_500neurons_12layers.h5')
+model.save('rawData_NxN_300epochs_batch10k_32neurons_12layers.h5')
 
 # Plot the scores
 # plt.figure(figsize=(8, 6))
@@ -134,4 +134,4 @@ plt.plot(history.history['val_loss'], label='Validation Loss')
 plt.legend()
 plt.show()
 #Save the plot to a file
-plt.savefig('rawData_NxN_64bs_100Epoch_132neurons_12layers_plot.png')
+plt.savefig('rawData_NxN_10kbs_300Epoch_32neurons_12layers_plot.png')
