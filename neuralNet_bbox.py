@@ -57,7 +57,7 @@ print("Number of columns:", num_columns)
 # df = data.sample(n = 50)
 
 # randomize sample observations
-df = df.sample(frac=1, random_state=42)
+df = df.sample(frac=0.6, random_state=42)
 
 # inputs = df[['Query_allele', 'Array_allele']]
 
