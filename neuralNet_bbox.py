@@ -81,7 +81,7 @@ x_train, x_val, y_train, y_val = train_test_split(binary_inputs, output, test_si
 model = Sequential()
 
 # Add the first layer with input dimension
-model.add(Dense(32, activation='relu', input_dim=binary_inputs.shape[1]))
+model.add(Dense(4066, activation='relu', input_dim=binary_inputs.shape[1]))
 
 # Add 10 hidden layers
 for _ in range(10):
