@@ -93,18 +93,18 @@ model.add(Dense(1, activation='linear'))
 # Compile the model
 model.compile(optimizer='adam', loss='mean_squared_error')
 
-# Perform cross-validation
+# # Perform cross-validation
 # num_folds = 10  # Number of cross-validation folds
 # scores = cross_val_score(model, binary_inputs, output, cv=num_folds, scoring='neg_mean_squared_error')
 # 
-# # Print scores
+# # # Print scores
 # print("Cross-validation scores:")
 # print(scores)
 # 
 # # Calculate mean and standard deviation of the scores
 # mean_score = -np.mean(scores)
 # std_score = np.std(scores)
-
+# 
 # print(f"Mean score: {mean_score:.4f}")
 # print(f"Standard deviation: {std_score:.4f}")
 
@@ -127,6 +127,16 @@ model.save('rawData_NxN_300epochs_batch10k_32neurons_12layers.h5')
 
 # Save the plot as an image file
 # plt.savefig('cross_validation_scores.png')
+
+# Make predictions using the trained model
+predictions = model.predict(x_val)
+
+# Create a scatter plot to visualize predictions vs. ground truth
+plt.scatter(y_val, predictions)
+plt.xlabel('Ground Truth')
+plt.ylabel('Predictions')
+plt.title('Predictions vs. Ground Truth')
+plt.savefig('rawData_NxN_10kbs_300Epoch_TruthVsPrediction_plot.png')
 
 #Print plot of model loss
 plt.plot(history.history['loss'], label='Training Loss')
