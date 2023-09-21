@@ -4,6 +4,9 @@ from keras.layers import Dense
 from sklearn.model_selection import train_test_split, cross_val_score
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.sparse import csr_matrix
+from collections import defaultdict
+
 
 def create_binary_matrix(df, gene_col1, gene_col2):
     # Create a set of unique genes from both columns
@@ -55,6 +58,7 @@ print("Number of columns:", num_columns)
 
 # Sample data
 # df = data.sample(n = 50)
+df.memory_usage(deep=True).sum()
 
 # randomize sample observations
 df = df.sample(frac=0.2, random_state=42)
