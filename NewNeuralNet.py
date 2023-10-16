@@ -37,7 +37,7 @@ def create_binary_matrix(df, gene_col1, gene_col2):
 dtypes = {'Query_allele': str, 'Array_allele': str, 'aggregated_growth_score': float, 'weighted_average_pvalue': float}
 chunksize = 100000  # Adjust the chunksize based on available memory and processing capabilities
 
-data_chunks = pd.read_csv("yeastRawData_StrainID_aggregateGrowth_weightedPval.csv", delimiter=',', dtype=dtypes,
+data_chunks = pd.read_csv("VNN/yeastRawData_StrainID_aggregateGrowth_weightedPval.csv", delimiter=',', dtype=dtypes,
                           chunksize=chunksize)
 
 # Initialize an empty list to store chunks
@@ -110,8 +110,12 @@ model.compile(optimizer='adam', loss='mean_squared_error')
 history = model.fit(x_train, y_train, batch_size=450, epochs=300, validation_data=(x_val, y_val))
 
 # Save the history object to a file
-with open('training_history.pkl', 'wb') as history_file:
-    pickle.dump(history.history, history_file)
+# with open('training_history.pkl', 'wb') as history_file:
+#     pickle.dump(history.history, history_file)
+
+# Save validation data to a CSV file
+x_val.to_csv('validation_x.csv', index=False)
+y_val.to_csv('validation_y.csv', index=False)
 
 # Evaluate the model
 score = model.evaluate(x_val, y_val)
