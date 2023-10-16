@@ -117,7 +117,7 @@ with open('training_history.pkl', 'wb') as history_file:
 score = model.evaluate(x_val, y_val)
 
 # Save model
-model.save('rawData_NxN_300epochs_batch10k_32neurons_12layers.h5')
+model.save('rawData_NxN_300epochs_batch450_4066neurons_12layers.h5')
 
 # Plot the scores
 # plt.figure(figsize=(8, 6))
@@ -146,4 +146,4 @@ plt.plot(history.history['val_loss'], label='Validation Loss')
 plt.legend()
 plt.show()
 # Save the plot to a file
-plt.savefig('rawData_NxN_10kbs_300Epoch_32neurons_12layers_plot.png')
+plt.savefig('rawData_NxN_450bs_300Epoch_4066neurons_12layers_plot.png')
