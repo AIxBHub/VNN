@@ -11,25 +11,25 @@ import pickle
 def create_binary_matrix(df, gene_col1, gene_col2):
     # Create a mapping of unique genes to column indices in the binary matrix
     gene_to_index = defaultdict(lambda: len(gene_to_index))
-
+    
     data = []
     row_indices = []
     col_indices = []
-
+    
     for i, (gene1, gene2) in enumerate(zip(df[gene_col1], df[gene_col2])):
         index1 = gene_to_index[gene1]
         index2 = gene_to_index[gene2]
-
+        
         data.extend([1, 1])  # Add 1 to both gene1 and gene2 positions
         row_indices.extend([i, i])
         col_indices.extend([index1, index2])
-
+        
     # Create a sparse matrix in Compressed Sparse Row (CSR) format
     binary_matrix = csr_matrix((data, (row_indices, col_indices)))
-
+    
     # Create a DataFrame from the sparse matrix
     binary_matrix_df = pd.DataFrame.sparse.from_spmatrix(binary_matrix, columns=list(gene_to_index.keys()))
-
+    
     return binary_matrix_df
 
 
