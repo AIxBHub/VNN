@@ -106,21 +106,21 @@ model.compile(optimizer='adam', loss='mean_squared_error')
 # print(f"Standard deviation: {std_score:.4f}")
 
 # Train the model
-history = model.fit(x_train, y_train, batch_size=450, epochs=300, validation_data=(x_val, y_val))
+history = model.fit(x_train, y_train, batch_size=1000, epochs=300, validation_data=(x_val, y_val))
 
-# Save the history object to a file
-# with open('training_history.pkl', 'wb') as history_file:
-#     pickle.dump(history.history, history_file)
+Save the history object to a file
+with open('nnn_training_history.pkl', 'wb') as history_file:
+    pickle.dump(history.history, history_file)
 
 # Save validation data to a CSV file
-x_val.to_csv('validation_x.csv', index=False)
-y_val.to_csv('validation_y.csv', index=False)
+x_val.to_csv('nnn_validation_x.csv', index=False)
+y_val.to_csv('nnn_validation_y.csv', index=False)
 
 # Evaluate the model
 score = model.evaluate(x_val, y_val)
 
 # Save model
-model.save('rawData_NxN_300epochs_batch450_4066neurons_12layers.h5')
+model.save('rawData_NxN_300epochs_batch1k_4066neurons_12layers.h5')
 
 # Plot the scores
 # plt.figure(figsize=(8, 6))
@@ -141,7 +141,7 @@ predictions = model.predict(x_val)
 # plt.xlabel('Ground Truth')
 # plt.ylabel('Predictions')
 # plt.title('Predictions vs. Ground Truth')
-# plt.savefig('rawData_NxN_10kbs_300Epoch_TruthVsPrediction_plot.png')
+# plt.savefig('rawData_NxN_1kbs_300Epoch_TruthVsPrediction_plot.png')
 
 # Print plot of model loss
 plt.plot(history.history['loss'], label='Training Loss')
