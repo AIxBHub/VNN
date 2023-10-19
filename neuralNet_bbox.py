@@ -38,7 +38,7 @@ def create_binary_matrix(df, gene_col1, gene_col2):
 dtypes = {'Query_allele': str, 'Array_allele': str, 'aggregated_growth_score': float, 'weighted_average_pvalue': float}
 chunksize = 100000  # Adjust the chunksize based on available memory and processing capabilities
 
-data_chunks = pd.read_csv("yeastRawData_StrainID_aggregateGrowth_weightedPval.csv", delimiter=',', dtype=dtypes, chunksize=chunksize)
+data_chunks = pd.read_csv("ExE_yeastRawData_StrainID_aggregateGrowth_weightedPval.csv", delimiter=',', dtype=dtypes, chunksize=chunksize)
 
 # Initialize an empty list to store chunks
 df_list = []
@@ -85,7 +85,7 @@ x_train, x_val, y_train, y_val = train_test_split(binary_inputs, output, test_si
 model = Sequential()
 
 # Add the first layer with input dimension
-model.add(Dense(4066, activation='relu', input_dim=binary_inputs.shape[1]))
+model.add(Dense(855, activation='relu', input_dim=binary_inputs.shape[1]))
 
 # Add 10 hidden layers
 for _ in range(10):
@@ -127,7 +127,7 @@ y_val.to_csv('nn_validation_y.csv', index=False)
 score = model.evaluate(x_val, y_val)
 
 # Save model
-model.save('rawData_NxN_300epochs_batch1k_4066neurons_12layers.h5')
+model.save('rawData_ExE_300epochs_batch1k_855neurons_12layers.h5')
 
 # Plot the scores
 # plt.figure(figsize=(8, 6))
@@ -156,4 +156,4 @@ plt.plot(history.history['val_loss'], label='Validation Loss')
 plt.legend()
 plt.show()
 #Save the plot to a file
-plt.savefig('rawData_NxN_1kbs_300Epoch_4066neurons_12layers_plot.png')
+plt.savefig('rawData_ExE_1kbs_300Epoch_855neurons_12layers_plot.png')
