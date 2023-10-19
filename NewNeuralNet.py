@@ -108,7 +108,7 @@ model.compile(optimizer='adam', loss='mean_squared_error')
 # Train the model
 history = model.fit(x_train, y_train, batch_size=1000, epochs=300, validation_data=(x_val, y_val))
 
-Save the history object to a file
+# Save the history object to a file
 with open('nnn_training_history.pkl', 'wb') as history_file:
     pickle.dump(history.history, history_file)
 
