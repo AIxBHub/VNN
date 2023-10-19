@@ -61,7 +61,7 @@ print("Number of columns:", num_columns)
 df.memory_usage(deep=True).sum()
 
 # randomize sample observations
-df = df.sample(frac=0.2, random_state=42)
+df = df.sample(frac=1, random_state=42)
 
 # inputs = df[['Query_allele', 'Array_allele']]
 
@@ -113,13 +113,21 @@ model.compile(optimizer='adam', loss='mean_squared_error')
 # print(f"Standard deviation: {std_score:.4f}")
 
 # Train the model
-history = model.fit(x_train, y_train, batch_size=10000, epochs=300, validation_data=(x_val, y_val))
+history = model.fit(x_train, y_train, batch_size=1000, epochs=300, validation_data=(x_val, y_val))
+
+Save the history object to a file
+with open('nn_training_history.pkl', 'wb') as history_file:
+    pickle.dump(history.history, history_file)
+
+# Save validation data to a CSV file
+x_val.to_csv('nn_validation_x.csv', index=False)
+y_val.to_csv('nn_validation_y.csv', index=False)
 
 # Evaluate the model
 score = model.evaluate(x_val, y_val)
 
 # Save model
-model.save('rawData_NxN_300epochs_batch10k_32neurons_12layers.h5')
+model.save('rawData_NxN_300epochs_batch1k_4066neurons_12layers.h5')
 
 # Plot the scores
 # plt.figure(figsize=(8, 6))
@@ -136,11 +144,11 @@ model.save('rawData_NxN_300epochs_batch10k_32neurons_12layers.h5')
 predictions = model.predict(x_val)
 
 # Create a scatter plot to visualize predictions vs. ground truth
-plt.scatter(y_val, predictions)
-plt.xlabel('Ground Truth')
-plt.ylabel('Predictions')
-plt.title('Predictions vs. Ground Truth')
-plt.savefig('rawData_NxN_10kbs_300Epoch_TruthVsPrediction_plot.png')
+# plt.scatter(y_val, predictions)
+# plt.xlabel('Ground Truth')
+# plt.ylabel('Predictions')
+# plt.title('Predictions vs. Ground Truth')
+# plt.savefig('rawData_NxN_1kbs_300Epoch_TruthVsPrediction_plot.png')
 
 #Print plot of model loss
 plt.plot(history.history['loss'], label='Training Loss')
@@ -148,4 +156,4 @@ plt.plot(history.history['val_loss'], label='Validation Loss')
 plt.legend()
 plt.show()
 #Save the plot to a file
-plt.savefig('rawData_NxN_10kbs_300Epoch_32neurons_12layers_plot.png')
+plt.savefig('rawData_NxN_1kbs_300Epoch_4066neurons_12layers_plot.png')
