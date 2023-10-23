@@ -37,7 +37,7 @@ def create_binary_matrix(df, gene_col1, gene_col2):
 dtypes = {'Query_allele': str, 'Array_allele': str, 'aggregated_growth_score': float, 'weighted_average_pvalue': float}
 chunksize = 100000  # Adjust the chunksize based on available memory and processing capabilities
 
-data_chunks = pd.read_csv("ExE_NxE_yeastRawData_StrainID_aggregateGrowth_weightedPval.csv", delimiter=',', dtype=dtypes, chunksize=chunksize)
+data_chunks = pd.read_csv("NxN_yeastRawData_StrainID_aggregateGrowth_weightedPval.csv", delimiter=',', dtype=dtypes, chunksize=chunksize)
 
 # Initialize an empty list to store chunks
 df_list = []
@@ -60,7 +60,7 @@ print("Number of columns:", num_columns)
 df.memory_usage(deep=True).sum()
 
 # randomize sample observations
-df = df.sample(frac=1, random_state=42)
+df = df.sample(frac=0.5, random_state=42)
 
 #gets first layer number of neurons based on total number of alleles
 neuron_nb = len(set(df['Query_allele']).union(set(df['Array_allele'])))
@@ -114,14 +114,14 @@ with open('nnn_training_history.pkl', 'wb') as history_file:
     pickle.dump(history.history, history_file)
 
 # Save validation data to a CSV file
-x_val.to_csv('ExE_NxE/nnn_validation_x.csv', index=False)
-y_val.to_csv('ExE_NxE/nnn_validation_y.csv', index=False)
+x_val.to_csv('NxN/nnn_validation_x.csv', index=False)
+y_val.to_csv('NxN/nnn_validation_y.csv', index=False)
 
 # Evaluate the model
 score = model.evaluate(x_val, y_val)
 
 # Save model
-model.save('ExE_NxE/rawData_ExE_NxE_300epochs_batch1k_5471neurons_12layers.h5')
+model.save('NxN/rawData_ExE_NxE_300epochs_batch1k_5471neurons_12layers.h5')
 
 # Plot the scores
 # plt.figure(figsize=(8, 6))
@@ -150,4 +150,4 @@ plt.plot(history.history['val_loss'], label='Validation Loss')
 plt.legend()
 plt.show()
 # Save the plot to a file
-plt.savefig('ExE_NxE/rawData_ExE_NxE_1k_300Epoch_5471neurons_12layers_plot.png')
+plt.savefig('NxN/rawData_ExE_NxE_1k_300Epoch_5471neurons_12layers_plot.png')
