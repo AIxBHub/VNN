@@ -7,6 +7,17 @@ import matplotlib.pyplot as plt
 from scipy.sparse import csr_matrix
 from collections import defaultdict
 import pickle
+import argparse
+
+# Add arguments for the directory and neuron number
+parser.add_argument('--directory', type=str, help='Directory name')
+args = parser.parse_args()
+
+def save_model_with_filename(model, neuron_nb, directory):
+    # Create the filename using the provided directory argument
+    filename = f'{directory}/rawData_{directory}_300epochs_batch1k_{neuron_nb}neurons_12layers.h5'
+    # Save the model with the dynamic filename
+    model.save(filename)
 
 def create_binary_matrix(df, gene_col1, gene_col2):
     # Create a mapping of unique genes to column indices in the binary matrix
@@ -110,18 +121,18 @@ model.compile(optimizer='adam', loss='mean_squared_error')
 history = model.fit(x_train, y_train, batch_size=1000, epochs=300, validation_data=(x_val, y_val))
 
 # Save the history object to a file
-with open('nnn_training_history.pkl', 'wb') as history_file:
+with open('{args.directory}/nnn_training_history.pkl', 'wb') as history_file:
     pickle.dump(history.history, history_file)
 
 # Save validation data to a CSV file
-x_val.to_csv('NxN/nnn_validation_x.csv', index=False)
-y_val.to_csv('NxN/nnn_validation_y.csv', index=False)
+x_val.to_csv('{args.directory}/nnn_validation_x.csv', index=False)
+y_val.to_csv('{args.directory}/nnn_validation_y.csv', index=False)
 
 # Evaluate the model
 score = model.evaluate(x_val, y_val)
 
 # Save model
-model.save('NxN/rawData_ExE_NxE_300epochs_batch1k_5471neurons_12layers.h5')
+save_model_with_filename(model, neuron_nb, directory=args.directory)
 
 # Plot the scores
 # plt.figure(figsize=(8, 6))
@@ -150,4 +161,4 @@ plt.plot(history.history['val_loss'], label='Validation Loss')
 plt.legend()
 plt.show()
 # Save the plot to a file
-plt.savefig('NxN/rawData_ExE_NxE_1k_300Epoch_5471neurons_12layers_plot.png')
+plt.savefig('{args.directory}/rawData_{args.directory}_1k_300Epoch_{neuron_nb}neurons_12layers_plot.png')
