@@ -10,8 +10,8 @@ import pickle
 import argparse
 
 # Add arguments for the directory and neuron number
-parser.add_argument('--directory', type=str, help='Directory name')
-args = parser.parse_args()
+# parser.add_argument('--directory', type=str, help='Directory name')
+# args = parser.parse_args()
 
 def save_model_with_filename(model, neuron_nb, directory):
     # Create the filename using the provided directory argument
@@ -71,7 +71,7 @@ print("Number of columns:", num_columns)
 df.memory_usage(deep=True).sum()
 
 # randomize sample observations
-df = df.sample(frac=0.5, random_state=42)
+df = df.sample(frac=0.2, random_state=42)
 
 #gets first layer number of neurons based on total number of alleles
 neuron_nb = len(set(df['Query_allele']).union(set(df['Array_allele'])))
@@ -121,12 +121,21 @@ model.compile(optimizer='adam', loss='mean_squared_error')
 history = model.fit(x_train, y_train, batch_size=1000, epochs=300, validation_data=(x_val, y_val))
 
 # Save the history object to a file
-with open('{args.directory}/nnn_training_history.pkl', 'wb') as history_file:
+# with open('{args.directory}/nnn_training_history.pkl', 'wb') as history_file:
+#     pickle.dump(history.history, history_file)
+# 
+# # Save validation data to a CSV file
+# x_val.to_csv('{args.directory}/nnn_validation_x.csv', index=False)
+# y_val.to_csv('{args.directory}/nnn_validation_y.csv', index=False)
+
+# Save the history object to a file
+with open('{NxN/nnn_training_history.pkl', 'wb') as history_file:
     pickle.dump(history.history, history_file)
 
 # Save validation data to a CSV file
-x_val.to_csv('{args.directory}/nnn_validation_x.csv', index=False)
-y_val.to_csv('{args.directory}/nnn_validation_y.csv', index=False)
+x_val.to_csv('NxN/nnn_validation_x.csv', index=False)
+y_val.to_csv('NxN/nnn_validation_y.csv', index=False)
+
 
 # Evaluate the model
 score = model.evaluate(x_val, y_val)
@@ -161,4 +170,4 @@ plt.plot(history.history['val_loss'], label='Validation Loss')
 plt.legend()
 plt.show()
 # Save the plot to a file
-plt.savefig('{args.directory}/rawData_{args.directory}_1k_300Epoch_{neuron_nb}neurons_12layers_plot.png')
+plt.savefig('NxN/rawData_NxN_1k_300Epoch_{neuron_nb}neurons_12layers_plot.png')
