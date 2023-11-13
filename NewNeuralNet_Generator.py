@@ -157,11 +157,11 @@ model.add(Dense(1, activation='linear'))
 # Compile the model
 model.compile(optimizer='adam', loss='mean_squared_error')
 
-print("Create data generators")"
+print("Create data generators")
 train_data_generator = DataGenerator(x_train, y_train, batch_size=1000)
 val_data_generator = DataGenerator(x_val, y_val, batch_size=1000)
 
-print("Train the model using data generators"")
+print("Train the model using data generators")
 history = model.fit(train_data_generator, epochs=300, validation_data=val_data_generator)
 
 # Save the history object to a file
