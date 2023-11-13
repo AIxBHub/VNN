@@ -64,7 +64,9 @@ class DataGenerator(Sequence):
         batch_indexes = self.indexes[start_idx:end_idx]
         batch_x = self.x.iloc[batch_indexes]
         batch_y = self.y.iloc[batch_indexes]
-        return batch_x, batch_y
+
+        # Ensure the shape is (None, None) for dynamic batch sizes
+        return batch_x.values, batch_y.values
     
     def on_epoch_end(self):
         if self.shuffle:
