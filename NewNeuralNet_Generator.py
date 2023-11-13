@@ -46,10 +46,13 @@ def create_binary_matrix(df, gene_col1, gene_col2):
 
 
 class DataGenerator(Sequence):
-    def __init__(self, x, y, batch_size):
+    def __init__(self, x, y, batch_size, shuffle=True):
         self.x, self.y = x, y
         self.batch_size = batch_size
         self.indexes = np.arange(len(self.x))
+        self.shuffle = shuffle
+        if self.shuffle:
+            np.random.shuffle(self.indexes)
 
     def __len__(self):
         return int(np.ceil(len(self.x) / self.batch_size))
@@ -57,9 +60,14 @@ class DataGenerator(Sequence):
     def __getitem__(self, index):
         start_idx = index * self.batch_size
         end_idx = (index + 1) * self.batch_size
-        batch_x = self.x.iloc[start_idx:end_idx]
-        batch_y = self.y.iloc[start_idx:end_idx]
+        batch_indexes = self.indexes[start_idx:end_idx]
+        batch_x = self.x.iloc[batch_indexes]
+        batch_y = self.y.iloc[batch_indexes]
         return batch_x, batch_y
+    
+    def on_epoch_end(self):
+        if self.shuffle:
+            np.random.shuffle(self.indexes)
 
 
 # Data generator
