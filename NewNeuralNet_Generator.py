@@ -125,20 +125,20 @@ print("Number of columns:", num_columns)
 # df = data.sample(n = 50)
 df.memory_usage(deep=True).sum()
 
-# randomize sample observations
+print("randomize sample observations")
 df = df.sample(frac=0.5, random_state=42)
 
 #gets first layer number of neurons based on total number of alleles
 neuron_nb = len(set(df['Query_allele']).union(set(df['Array_allele'])))
 
-# Call function to create binary matrix for input
+print("Call function to create binary matrix for input")
 binary_inputs = create_binary_matrix(df, 'Query_allele', 'Array_allele')
 output = df['aggregated_growth_score']
 
 # delete dataframe
 del df
 
-# Split the data into training and validation sets
+print("Split the data into training and validation sets")
 x_train, x_val, y_train, y_val = train_test_split(binary_inputs, output, test_size=0.2)
 
 # Define the model architecture
@@ -157,11 +157,11 @@ model.add(Dense(1, activation='linear'))
 # Compile the model
 model.compile(optimizer='adam', loss='mean_squared_error')
 
-# Create data generators
+print("Create data generators")"
 train_data_generator = DataGenerator(x_train, y_train, batch_size=1000)
 val_data_generator = DataGenerator(x_val, y_val, batch_size=1000)
 
-# Train the model using data generators
+print("Train the model using data generators"")
 history = model.fit(train_data_generator, epochs=300, validation_data=val_data_generator)
 
 # Save the history object to a file
