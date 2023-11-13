@@ -11,8 +11,8 @@ import pickle
 import argparse
 
 # Add arguments for the directory and neuron number
-# parser.add_argument('--directory', type=str, help='Directory name')
-# args = parser.parse_args()
+parser.add_argument('--directory', type=str, help='Directory name')
+args = parser.parse_args()
 
 def save_model_with_filename(model, neuron_nb, directory):
     # Create the filename using the provided directory argument
@@ -63,31 +63,31 @@ class DataGenerator(Sequence):
 
 
 # Data generator
-class CustomDataGenerator(Sequence):
-    def __init__(self, data, labels, batch_size, shuffle=True):
-        self.data = data
-        self.labels = labels
-        self.batch_size = batch_size
-        self.shuffle = shuffle
-        self.indexes = np.arange(len(self.data))
-        
-    def __len__(self):
-        return int(np.ceil(len(self.data) / self.batch_size))
-    
-    def __getitem__(self, index):
-        start = index * self.batch_size
-        end = (index + 1) * self.batch_size
-        
-        batch_indices = self.indexes[start:end]
-        
-        X = self.data[batch_indices]
-        y = self.labels[batch_indices]
-        
-        return X, y
-    
-    def on_epoch_end(self):
-        if self.shuffle:
-            np.random.shuffle(self.indexes)
+# class CustomDataGenerator(Sequence):
+#     def __init__(self, data, labels, batch_size, shuffle=True):
+#         self.data = data
+#         self.labels = labels
+#         self.batch_size = batch_size
+#         self.shuffle = shuffle
+#         self.indexes = np.arange(len(self.data))
+#         
+#     def __len__(self):
+#         return int(np.ceil(len(self.data) / self.batch_size))
+#     
+#     def __getitem__(self, index):
+#         start = index * self.batch_size
+#         end = (index + 1) * self.batch_size
+#         
+#         batch_indices = self.indexes[start:end]
+#         
+#         X = self.data[batch_indices]
+#         y = self.labels[batch_indices]
+#         
+#         return X, y
+#     
+#     def on_epoch_end(self):
+#         if self.shuffle:
+#             np.random.shuffle(self.indexes)
 
 
 # Load and preprocess the data
