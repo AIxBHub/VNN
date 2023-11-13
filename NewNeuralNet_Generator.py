@@ -71,32 +71,28 @@ class DataGenerator(Sequence):
             np.random.shuffle(self.indexes)
 
 
-# Data generator
-# class CustomDataGenerator(Sequence):
-#     def __init__(self, data, labels, batch_size, shuffle=True):
-#         self.data = data
-#         self.labels = labels
-#         self.batch_size = batch_size
-#         self.shuffle = shuffle
-#         self.indexes = np.arange(len(self.data))
-#         
-#     def __len__(self):
-#         return int(np.ceil(len(self.data) / self.batch_size))
-#     
-#     def __getitem__(self, index):
-#         start = index * self.batch_size
-#         end = (index + 1) * self.batch_size
-#         
-#         batch_indices = self.indexes[start:end]
-#         
-#         X = self.data[batch_indices]
-#         y = self.labels[batch_indices]
-#         
-#         return X, y
-#     
-#     def on_epoch_end(self):
-#         if self.shuffle:
-#             np.random.shuffle(self.indexes)
+def split_data_generator(binary_inputs, output, test_size=0.2, batch_size=1000, shuffle=True):
+    indexes = np.arange(len(binary_inputs))
+    if shuffle:
+        np.random.shuffle(indexes)
+
+    start_idx = 0
+    while True:
+        end_idx = start_idx + batch_size
+        if end_idx >= len(binary_inputs):
+            break
+
+        batch_indexes = indexes[start_idx:end_idx]
+        batch_x = binary_inputs.iloc[batch_indexes]
+        batch_y = output.iloc[batch_indexes]
+
+        # Split the batch data
+        x_train, x_val, y_train, y_val = train_test_split(batch_x, batch_y, test_size=test_size)
+
+        start_idx = end_idx
+
+        yield x_train, y_train, x_val, y_val
+
 
 
 # Load and preprocess the data
@@ -139,7 +135,8 @@ output = df['aggregated_growth_score']
 del df
 
 print("Split the data into training and validation sets")
-x_train, x_val, y_train, y_val = train_test_split(binary_inputs, output, test_size=0.2)
+data_split_generator = split_data_generator(binary_inputs, output)
+x_train, y_train, x_val, y_val = next(data_split_generator)
 
 # Define the model architecture
 model = Sequential()
