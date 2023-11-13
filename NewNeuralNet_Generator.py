@@ -124,7 +124,7 @@ print("Number of columns:", num_columns)
 df.memory_usage(deep=True).sum()
 
 print("randomize sample observations")
-df = df.sample(frac=0.5, random_state=42)
+df = df.sample(frac=1, random_state=42)
 
 #gets first layer number of neurons based on total number of alleles
 neuron_nb = len(set(df['Query_allele']).union(set(df['Array_allele'])))
