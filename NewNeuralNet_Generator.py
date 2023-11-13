@@ -11,6 +11,7 @@ import pickle
 import argparse
 
 # Add arguments for the directory and neuron number
+parser = argparse.ArgumentParser()
 parser.add_argument('--directory', type=str, help='Directory name')
 args = parser.parse_args()
 
