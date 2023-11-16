@@ -93,7 +93,8 @@ def split_data_generator(binary_inputs, output, test_size=0.2, batch_size=1000, 
 
         start_idx = end_idx
 
-        yield x_train, y_train, x_val, y_val
+        #yield x_train, y_train, x_val, y_val
+        yield start_idx, end_idx
 
 
 
@@ -137,8 +138,11 @@ output = df['aggregated_growth_score']
 del df
 
 print("Split the data into training and validation sets")
-data_split_generator = split_data_generator(binary_inputs, output)
-x_train, y_train, x_val, y_val = next(data_split_generator)
+# data_split_generator = split_data_generator(binary_inputs, output)
+# x_train, y_train, x_val, y_val = next(data_split_generator)
+# Split your data into training and validation sets before using the generator
+x_train, x_val, y_train, y_val = train_test_split(binary_inputs, output, test_size=0.2)
+
 
 # Define the model architecture
 model = Sequential()
@@ -157,11 +161,11 @@ model.add(Dense(1, activation='linear'))
 model.compile(optimizer='adam', loss='mean_squared_error')
 
 print("Create data generators")
-train_data_generator = DataGenerator(x_train, y_train, batch_size=1000)
-val_data_generator = DataGenerator(x_val, y_val, batch_size=1000)
+train_data_generator = DataGenerator(x_train, y_train, batch_size=10000)
+val_data_generator = DataGenerator(x_val, y_val, batch_size=10000)
 
 print("Train the model using data generators")
-history = model.fit(train_data_generator, epochs=300, validation_data=val_data_generator)
+history = model.fit(train_data_generator, epochs=60, validation_data=val_data_generator)
 
 # Save the history object to a file
 with open('NxN/nnn_training_history.pkl', 'wb') as history_file:
@@ -186,7 +190,7 @@ plt.plot(history.history['loss'], label='Training Loss')
 plt.plot(history.history['val_loss'], label='Validation Loss')
 plt.legend()
 plt.show()
-plt.savefig('NxN/rawData_NxN_1k_300Epoch_{neuron_nb}neurons_12layers_plot.png')
+plt.savefig(f'NxN/rawData_NxN_1k_60Epoch_{neuron_nb}neurons_12layers_plot.png')
 
 # # Perform cross-validation
 # num_folds = 10  # Number of cross-validation folds
