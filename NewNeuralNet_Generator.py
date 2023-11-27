@@ -165,7 +165,7 @@ train_data_generator = DataGenerator(x_train, y_train, batch_size=10000)
 val_data_generator = DataGenerator(x_val, y_val, batch_size=10000)
 
 print("Train the model using data generators")
-history = model.fit(train_data_generator, epochs=10, validation_data=val_data_generator)
+history = model.fit(train_data_generator, epochs=60, validation_data=val_data_generator)
 
 # Save the history object to a file
 with open('NxN/nnn_training_history.pkl', 'wb') as history_file:
