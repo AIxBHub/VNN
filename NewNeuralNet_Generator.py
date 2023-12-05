@@ -141,17 +141,20 @@ print("Split the data into training and validation sets")
 # data_split_generator = split_data_generator(binary_inputs, output)
 # x_train, y_train, x_val, y_val = next(data_split_generator)
 # Split your data into training and validation sets before using the generator
-x_train, x_val, y_train, y_val = train_test_split(binary_inputs, output, test_size=0.2)
+test_size_downstream = 1000
+x_testing, x_model, y_testing, y_model = train_test_split(binary_inputs, output, test_size=test_size_downstream, random_state = 42)
+
+x_train, x_val, y_train, y_val = train_test_split(x_testing, y_testing, test_size=0.2)
 
 
 # Define the model architecture
 model = Sequential()
 
 # Add the first layer with input dimension
-model.add(Dense(neuron_nb, activation='relu', input_dim=binary_inputs.shape[1]))
-
+model.add(Dense(neuron_nb, activation='relu', input_dim=x_testing.shape[1]))
+model.add(Dense(813, activation = 'relu'))
 # Add 10 hidden layers
-for _ in range(10):
+for _ in range(9):
     model.add(Dense(64, activation='relu'))
 
 # Add the final output layer
@@ -165,7 +168,7 @@ train_data_generator = DataGenerator(x_train, y_train, batch_size=10000)
 val_data_generator = DataGenerator(x_val, y_val, batch_size=10000)
 
 print("Train the model using data generators")
-history = model.fit(train_data_generator, epochs=60, validation_data=val_data_generator)
+history = model.fit(train_data_generator, epochs=10, validation_data=val_data_generator)
 
 # Save the history object to a file
 with open('NxN/nnn_training_history.pkl', 'wb') as history_file:
@@ -174,6 +177,8 @@ with open('NxN/nnn_training_history.pkl', 'wb') as history_file:
 # Save validation data to a CSV file
 x_val.to_csv('NxN/nnn_validation_x.csv', index=False)
 y_val.to_csv('NxN/nnn_validation_y.csv', index=False)
+x_test_downstream.to_csv('NxN/nnn_test_x.csv', index=False)
+y_test_downstream.to_csv('NxN/nnn_test_y.csv', index=False)
 
 
 # Evaluate the model
