@@ -142,7 +142,7 @@ print("Split the data into training and validation sets")
 # x_train, y_train, x_val, y_val = next(data_split_generator)
 # Split your data into training and validation sets before using the generator
 test_size_downstream = 1000
-x_testing, x_model, y_testing, y_model = train_test_split(binary_inputs, output, test_size=test_size_downstream, random_state = 42)
+x_model, x_testing, y_model, y_testing = train_test_split(binary_inputs, output, test_size=test_size_downstream, random_state = 42)
 
 x_train, x_val, y_train, y_val = train_test_split(x_testing, y_testing, test_size=0.2)
 
@@ -177,8 +177,8 @@ with open('NxN/nnn_training_history.pkl', 'wb') as history_file:
 # Save validation data to a CSV file
 x_val.to_csv('NxN/nnn_validation_x.csv', index=False)
 y_val.to_csv('NxN/nnn_validation_y.csv', index=False)
-x_test_downstream.to_csv('NxN/nnn_test_x.csv', index=False)
-y_test_downstream.to_csv('NxN/nnn_test_y.csv', index=False)
+x_testing.to_csv('NxN/nnn_test_x.csv', index=False)
+y_testing.to_csv('NxN/nnn_test_y.csv', index=False)
 
 
 # Evaluate the model
