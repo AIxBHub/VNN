@@ -13,11 +13,12 @@ import argparse
 # Add arguments for the directory and neuron number
 parser = argparse.ArgumentParser()
 parser.add_argument('--directory', type=str, help='Directory name')
+parser.add_argument('--epochs', type=int, default=20, help='Number of epochs (default: 20)')
 args = parser.parse_args()
 
-def save_model_with_filename(model, neuron_nb, directory):
+def save_model_with_filename(model, neuron_nb, directory, epochs):
     # Create the filename using the provided directory argument
-    filename = f'{directory}/rawData_{directory}_300epochs_batch1k_{neuron_nb}neurons_12layers.h5'
+    filename = f'{directory}/rawData_{directory}_{epochs}epochs_batch1k_{neuron_nb}neurons_12layers.h5'
     # Save the model with the dynamic filename
     model.save(filename)
 
@@ -102,7 +103,7 @@ def split_data_generator(binary_inputs, output, test_size=0.2, batch_size=1000, 
 dtypes = {'Query_allele': str, 'Array_allele': str, 'aggregated_growth_score': float, 'weighted_average_pvalue': float}
 chunksize = 100000  # Adjust the chunksize based on available memory and processing capabilities
 
-data_chunks = pd.read_csv("NxN_yeastRawData_StrainID_aggregateGrowth_weightedPval.csv", delimiter=',', dtype=dtypes, chunksize=chunksize)
+data_chunks = pd.read_csv("input_files/AllData_lowestPval_weightedPval_filtered.csv", delimiter=',', dtype=dtypes, chunksize=chunksize)
 
 # Initialize an empty list to store chunks
 df_list = []
@@ -132,7 +133,7 @@ neuron_nb = len(set(df['Query_allele']).union(set(df['Array_allele'])))
 
 print("Call function to create binary matrix for input")
 binary_inputs = create_binary_matrix(df, 'Query_allele', 'Array_allele')
-output = df['aggregated_growth_score']
+output = df['Double_mutant_fitness']
 
 # delete dataframe
 del df
@@ -168,15 +169,15 @@ train_data_generator = DataGenerator(x_train, y_train, batch_size=10000)
 val_data_generator = DataGenerator(x_val, y_val, batch_size=10000)
 
 print("Train the model using data generators")
-history = model.fit(train_data_generator, epochs=10, validation_data=val_data_generator)
+history = model.fit(train_data_generator, epochs=args.epochs, validation_data=val_data_generator)
 
 # Save the history object to a file
 with open('NxN/nnn_training_history.pkl', 'wb') as history_file:
     pickle.dump(history.history, history_file)
 
 # Save validation data to a CSV file
-x_val.to_csv('NxN/nnn_validation_x.csv', index=False)
-y_val.to_csv('NxN/nnn_validation_y.csv', index=False)
+# x_val.to_csv('NxN/nnn_validation_x.csv', index=False)
+# y_val.to_csv('NxN/nnn_validation_y.csv', index=False)
 x_testing.to_csv('NxN/nnn_test_x.csv', index=False)
 y_testing.to_csv('NxN/nnn_test_y.csv', index=False)
 
@@ -185,7 +186,7 @@ y_testing.to_csv('NxN/nnn_test_y.csv', index=False)
 score = model.evaluate(val_data_generator)
 
 # Save model
-save_model_with_filename(model, neuron_nb, directory=args.directory)
+save_model_with_filename(model, neuron_nb, directory=args.directory, epochs=args.epochs)
 
 # Make predictions using the trained model
 predictions = model.predict(x_val)
@@ -195,45 +196,4 @@ plt.plot(history.history['loss'], label='Training Loss')
 plt.plot(history.history['val_loss'], label='Validation Loss')
 plt.legend()
 plt.show()
-plt.savefig(f'NxN/rawData_NxN_1k_60Epoch_{neuron_nb}neurons_12layers_plot.png')
-
-# # Perform cross-validation
-# num_folds = 10  # Number of cross-validation folds
-# scores = cross_val_score(model, binary_inputs, output, cv=num_folds, scoring='neg_mean_squared_error')
-#
-# # # Print scores
-# print("Cross-validation scores:")
-# print(scores)
-#
-# # Calculate mean and standard deviation of the scores
-# mean_score = -np.mean(scores)
-# std_score = np.std(scores)
-#
-# print(f"Mean score: {mean_score:.4f}")
-# print(f"Standard deviation: {std_score:.4f}")
-
-# Save the history object to a file
-# with open('{args.directory}/nnn_training_history.pkl', 'wb') as history_file:
-#     pickle.dump(history.history, history_file)
-# 
-# # Save validation data to a CSV file
-# x_val.to_csv('{args.directory}/nnn_validation_x.csv', index=False)
-# y_val.to_csv('{args.directory}/nnn_validation_y.csv', index=False)
-
-# Plot the scores
-# plt.figure(figsize=(8, 6))
-# plt.plot(range(1, num_folds + 1), -scores, marker='o', linestyle='-', color='blue')
-# plt.xlabel('Fold')
-# plt.ylabel('Negative Mean Squared Error')
-# plt.title('Cross-Validation Scores')
-# plt.grid(True)
-
-# Save the plot as an image file
-# plt.savefig('cross_validation_scores.png')
-
-# Create a scatter plot to visualize predictions vs. ground truth
-# plt.scatter(y_val, predictions)
-# plt.xlabel('Ground Truth')
-# plt.ylabel('Predictions')
-# plt.title('Predictions vs. Ground Truth')
-# plt.savefig('rawData_NxN_1kbs_300Epoch_TruthVsPrediction_plot.png')
+plt.savefig(f'{args.directory}/rawData_{args.directory}_1k_{args.epochs}Epoch_{neuron_nb}neurons_12layers_plot.png')
