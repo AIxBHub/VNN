@@ -175,7 +175,7 @@ print("Train the model using data generators")
 history = model.fit(train_data_generator, epochs=args.epochs, validation_data=val_data_generator)
 
 # Save the history object to a file
-with open('f{args.directory}/nnn_training_history.pkl', 'wb') as history_file:
+with open(f'{args.directory}/nnn_training_history.pkl', 'wb') as history_file:
     pickle.dump(history.history, history_file)
 
 # Save validation data to a CSV file
