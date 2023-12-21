@@ -147,6 +147,9 @@ x_model, x_testing, y_model, y_testing = train_test_split(binary_inputs, output,
 
 x_train, x_val, y_train, y_val = train_test_split(x_testing, y_testing, test_size=0.2)
 
+# Record the indexes of the training set
+training_set_indexes = x_testing.index.tolist()
+
 
 # Define the model architecture
 model = Sequential()
@@ -178,9 +181,9 @@ with open('{args.directory}/nnn_training_history.pkl', 'wb') as history_file:
 # Save validation data to a CSV file
 # x_val.to_csv('NxN/nnn_validation_x.csv', index=False)
 # y_val.to_csv('NxN/nnn_validation_y.csv', index=False)
-x_testing.to_csv('{args.directory}/nnn_test_x.csv', index=False)
-y_testing.to_csv('{args.directory}/nnn_test_y.csv', index=False)
-
+x_testing.to_csv('{args.directory}/alldata_test_x.csv', index=False)
+y_testing.to_csv('{args.directory}/alldata_test_y.csv', index=False)
+training_set_indexes.to_csv('{args.directory}/80k_alldata_indexes.csv', index=False)
 
 # Evaluate the model
 score = model.evaluate(val_data_generator)
