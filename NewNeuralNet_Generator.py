@@ -142,7 +142,7 @@ print("Split the data into training and validation sets")
 # data_split_generator = split_data_generator(binary_inputs, output)
 # x_train, y_train, x_val, y_val = next(data_split_generator)
 # Split your data into training and validation sets before using the generator
-test_size_downstream = 1000
+test_size_downstream = 80000
 x_model, x_testing, y_model, y_testing = train_test_split(binary_inputs, output, test_size=test_size_downstream, random_state = 42)
 
 x_train, x_val, y_train, y_val = train_test_split(x_testing, y_testing, test_size=0.2)
