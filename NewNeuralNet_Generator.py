@@ -175,15 +175,15 @@ print("Train the model using data generators")
 history = model.fit(train_data_generator, epochs=args.epochs, validation_data=val_data_generator)
 
 # Save the history object to a file
-with open('{args.directory}/nnn_training_history.pkl', 'wb') as history_file:
+with open('f{args.directory}/nnn_training_history.pkl', 'wb') as history_file:
     pickle.dump(history.history, history_file)
 
 # Save validation data to a CSV file
 # x_val.to_csv('NxN/nnn_validation_x.csv', index=False)
 # y_val.to_csv('NxN/nnn_validation_y.csv', index=False)
-x_testing.to_csv('{args.directory}/alldata_test_x.csv', index=False)
-y_testing.to_csv('{args.directory}/alldata_test_y.csv', index=False)
-training_set_indexes.to_csv('{args.directory}/80k_alldata_indexes.csv', index=False)
+x_testing.to_csv(f'{args.directory}/alldata_test_x.csv', index=False)
+y_testing.to_csv(f'{args.directory}/alldata_test_y.csv', index=False)
+training_set_indexes.to_csv(f'{args.directory}/80k_alldata_indexes.csv', index=False)
 
 # Evaluate the model
 score = model.evaluate(val_data_generator)
