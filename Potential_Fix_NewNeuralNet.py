@@ -142,7 +142,7 @@ training_set_indexes = x_testing.index.tolist()
 
 # Save the indexes of the training set to a CSV file
 training_set_indexes_df = pd.DataFrame({'Index': training_set_indexes})
-training_set_indexes_df.to_csv('{args.directory}/training_set_indexes.csv', index=False)
+training_set_indexes_df.to_csv(f'{args.directory}/training_set_indexes.csv', index=False)
 
 # Save validation data to a CSV file
 x_testing.to_csv(f'{args.directory}/alldata_test_x.csv', index=False)
