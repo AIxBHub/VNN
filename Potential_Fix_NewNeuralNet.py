@@ -15,6 +15,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--directory', type=str, help='Directory name')
 parser.add_argument('--epochs', type=int, default=20, help='Number of epochs (default: 20)')
 parser.add_argument('--layers', type=int, default=9, help='Number of layers (default: 9)')
+parser.add_argument('--filename', type=str, required=True, help='CSV file to read')
 args = parser.parse_args()
 
 def save_model_with_filename(model, neuron_nb, directory, epochs, batch, layer):
@@ -104,7 +105,10 @@ def split_data_generator(binary_inputs, output, test_size=0.2, batch_size=1000, 
 dtypes = {'Query_allele': str, 'Array_allele': str, 'Double_mutant_fitness': float, 'weighted_eps_pvalue': float, 'Genetic_interaction_score': float}
 chunksize = 100000  # Adjust the chunksize based on available memory and processing capabilities
 
-data_chunks = pd.read_csv("input_files/AllData_lowestPval_weightedPval_filtered.csv", delimiter=',', dtype=dtypes, chunksize=chunksize)
+# Construct the full path to the CSV file
+file_path = os.path.join('input_files', args.filename)
+
+data_chunks = pd.read_csv(file_path, delimiter=',', dtype=dtypes, chunksize=chunksize)
 
 # Initialize an empty list to store chunks
 df_list = []
