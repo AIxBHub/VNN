@@ -17,9 +17,9 @@ parser.add_argument('--epochs', type=int, default=20, help='Number of epochs (de
 parser.add_argument('--layers', type=int, default=9, help='Number of layers (default: 9)')
 args = parser.parse_args()
 
-def save_model_with_filename(model, neuron_nb, directory, epochs):
+def save_model_with_filename(model, neuron_nb, directory, epochs, batch, layer):
     # Create the filename using the provided directory argument
-    filename = f'{directory}/rawData_{directory}_{epochs}epochs_batch1k_{neuron_nb}neurons_12layers.h5'
+    filename = f'{directory}/rawData_{directory}_{epochs}epochs_{batch}1k_{neuron_nb}neurons_{layer}layers.h5'
     # Save the model with the dynamic filename
     model.save(filename)
 
@@ -193,7 +193,7 @@ history = model.fit(train_data_generator, epochs=args.epochs, validation_data=va
 score = model.evaluate(val_data_generator)
 
 # Save model
-save_model_with_filename(model, neuron_nb, directory=args.directory, epochs=args.epochs)
+save_model_with_filename(model, neuron_nb, directory=args.directory, epochs=args.epochs, batch_file, layer=args.layers)
 
 # Make predictions using the trained model
 predictions = model.predict(x_val)
