@@ -104,7 +104,7 @@ def split_data_generator(binary_inputs, output, test_size=0.2, batch_size=1000, 
 dtypes = {'Query_allele': str, 'Array_allele': str, 'Double_mutant_fitness': float, 'weighted_eps_pvalue': float, 'Genetic_interaction_score': float}
 chunksize = 100000  # Adjust the chunksize based on available memory and processing capabilities
 
-data_chunks = pd.read_csv("input_files/AllData_lowestPval_weightedPval_filtered_sampled_25percent.csv", delimiter=',', dtype=dtypes, chunksize=chunksize)
+data_chunks = pd.read_csv("input_files/AllData_lowestPval_weightedPval_filtered_sampled_50percent.csv", delimiter=',', dtype=dtypes, chunksize=chunksize)
 
 # Initialize an empty list to store chunks
 df_list = []
