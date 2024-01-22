@@ -84,8 +84,21 @@ write.csv(condensed_data, "AllData_lowestPval_weightedPval.csv")
 allele_list <- readLines("20231219_final_gene_list.txt")
 allele_list <- as.list(allele_list)
 
-# Filter the dataset based on the allele list for both columns
-filtered_data <- condensed_data %>% 
-  filter(Query_allele %in% allele_list & Array_allele %in% allele_list)
+# Set the percentage of genes to sample
+percentage_to_sample <- 0.5 
 
-write.csv(filtered_data, "AllData_lowestPval_weightedPval_filtered.csv")
+# Randomly sample genes
+set.seed(123)  
+sampled_genes <- sample(allele_list, size = round(length(allele_list) * percentage_to_sample))
+
+# Filter the dataset based on the sampled genes for both columns
+filtered_data <- condensed_data %>% 
+  filter(Query_allele %in% sampled_genes & Array_allele %in% sampled_genes)
+
+# Write the filtered data to CSV
+write.csv(filtered_data, "SampledData_lowestPval_weightedPval_filtered.csv")
+
+# Write the sampled gene list to a file
+writeLines(sampled_genes, "Sampled_gene_list_50per.txt")
+
+# write.csv(filtered_data, "AllData_lowestPval_weightedPval_filtered.csv")
