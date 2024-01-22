@@ -177,10 +177,10 @@ model.add(Dense(1, activation='linear'))
 
 # Compile the model
 model.compile(optimizer='adam', loss='mean_squared_error')
-
+batch_size = 10000
 print("Create data generators")
-train_data_generator = DataGenerator(x_train, y_train, batch_size=10000)
-val_data_generator = DataGenerator(x_val, y_val, batch_size=10000)
+train_data_generator = DataGenerator(x_train, y_train, batch_size=batch_size)
+val_data_generator = DataGenerator(x_val, y_val, batch_size=batch_size)
 batch_file = batch_size/1000
 print("Train the model using data generators")
 history = model.fit(train_data_generator, epochs=args.epochs, validation_data=val_data_generator)
