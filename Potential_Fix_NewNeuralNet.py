@@ -14,6 +14,7 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('--directory', type=str, help='Directory name')
 parser.add_argument('--epochs', type=int, default=20, help='Number of epochs (default: 20)')
+parser.add_argument('--layers', type=int, default=9, help='Number of layers (default: 9)')
 args = parser.parse_args()
 
 def save_model_with_filename(model, neuron_nb, directory, epochs):
@@ -100,7 +101,7 @@ def split_data_generator(binary_inputs, output, test_size=0.2, batch_size=1000, 
 
 
 # Load and preprocess the data
-dtypes = {'Query_allele': str, 'Array_allele': str, 'aggregated_growth_score': float, 'weighted_average_pvalue': float}
+dtypes = {'Query_allele': str, 'Array_allele': str, 'Double_mutant_fitness': float, 'weighted_eps_pvalue': float, 'Genetic_interaction_score': float}
 chunksize = 100000  # Adjust the chunksize based on available memory and processing capabilities
 
 data_chunks = pd.read_csv("input_files/AllData_lowestPval_weightedPval_filtered.csv", delimiter=',', dtype=dtypes, chunksize=chunksize)
@@ -168,8 +169,8 @@ model = Sequential()
 model.add(Dense(neuron_nb, activation='relu', input_dim=x_train.shape[1]))
 model.add(Dense(813, activation = 'relu'))
 # Add 10 hidden layers
-for _ in range(9):
-    model.add(Dense(64, activation='relu'))
+for _ in range(args.layers):
+    model.add(Dense(813, activation='relu'))
 
 # Add the final output layer
 model.add(Dense(1, activation='linear'))
@@ -180,7 +181,7 @@ model.compile(optimizer='adam', loss='mean_squared_error')
 print("Create data generators")
 train_data_generator = DataGenerator(x_train, y_train, batch_size=10000)
 val_data_generator = DataGenerator(x_val, y_val, batch_size=10000)
-
+batch_file = batch_size/1000
 print("Train the model using data generators")
 history = model.fit(train_data_generator, epochs=args.epochs, validation_data=val_data_generator)
 
@@ -202,4 +203,4 @@ plt.plot(history.history['loss'], label='Training Loss')
 plt.plot(history.history['val_loss'], label='Validation Loss')
 plt.legend()
 plt.show()
-plt.savefig(f'{args.directory}/rawData_{args.directory}_1k_{args.epochs}Epoch_{neuron_nb}neurons_12layers_plot.png')
+plt.savefig(f'{args.directory}/rawData_{args.directory}_{batch_file}kbatch_{args.epochs}Epoch_{neuron_nb}neurons_{args.layers}layers_plot.png')
