@@ -9,6 +9,8 @@ from scipy.sparse import csr_matrix
 from collections import defaultdict
 import pickle
 import argparse
+import os
+import glob
 
 # Add arguments for the directory and neuron number
 parser = argparse.ArgumentParser()
