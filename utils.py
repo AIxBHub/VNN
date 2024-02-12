@@ -2,6 +2,7 @@ import pandas as pd
 from scipy.sparse import csr_matrix
 from collections import defaultdict
 from keras.utils import Sequence
+import numpy as np
 
 def save_model_with_filename(model, neuron_nb, directory, epochs, batch, layer):
     

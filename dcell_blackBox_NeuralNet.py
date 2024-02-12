@@ -5,7 +5,6 @@ from keras.layers import Dense
 from keras.utils import Sequence
 from keras.optimizers import Adam
 from sklearn.model_selection import train_test_split, cross_val_score
-import numpy as np
 import matplotlib.pyplot as plt
 import pickle
 import argparse
