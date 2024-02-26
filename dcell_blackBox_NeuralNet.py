@@ -1,5 +1,5 @@
 import pandas as pd
-from utils import create_binary_matrix, DataGenerator, split_data_generator
+from utils import create_binary_matrix, DataGenerator, split_data_generator, save_model_with_filename
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.utils import Sequence
