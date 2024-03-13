@@ -17,6 +17,7 @@ parser.add_argument('--directory', type=str, help='Directory name')
 parser.add_argument('--epochs', type=int, default=20, help='Number of epochs (default: 20)')
 parser.add_argument('--layers', type=int, default=9, help='Number of layers (default: 9)')
 parser.add_argument('--filename', type=str, required=True, help='CSV file to read')
+parser.add_argument('--percent', type=int, required=True, help='Percent of Data')
 args = parser.parse_args()
 
 # Load and preprocess the data
@@ -65,11 +66,11 @@ training_set_indexes = x_testing.index.tolist()
 
 # Save the indexes of the training set to a CSV file
 training_set_indexes_df = pd.DataFrame({'Index': training_set_indexes})
-training_set_indexes_df.to_csv(f'{args.directory}/training_set_indexes.csv', index=False)
+training_set_indexes_df.to_csv(f'{args.directory}/{args.percent}_percent/training_set_indexes.csv', index=False)
 
 # Save validation data to a CSV file
-x_testing.to_csv(f'{args.directory}/{args.layers}layers_{args.epochs}epochs_alldata_test_x.csv', index=False)
-y_testing.to_csv(f'{args.directory}/{args.layers}layers_{args.epochs}epochs_alldata_test_y.csv', index=False)
+x_testing.to_csv(f'{args.directory}/{args.percent}_percent/{args.layers}layers_{args.epochs}epochs_alldata_test_x.csv', index=False)
+y_testing.to_csv(f'{args.directory}/{args.percent}_percent/{args.layers}layers_{args.epochs}epochs_alldata_test_y.csv', index=False)
 
 #gets first layer number of neurons based on total number of alleles
 neuron_nb = len(set(x_model['Query_allele']).union(set(x_model['Array_allele'])))
@@ -127,4 +128,4 @@ plt.plot(history.history['loss'], label='Training Loss')
 plt.plot(history.history['val_loss'], label='Validation Loss')
 plt.legend()
 plt.show()
-plt.savefig(f'{args.directory}/rawData_{args.directory}_{batch_file}kbatch_{args.epochs}Epoch_{neuron_nb}neurons_{args.layers}layers_plot.png')
+plt.savefig(f'{args.directory}/{args.percent}_percent/rawData_{args.directory}_{batch_file}kbatch_{args.epochs}Epoch_{neuron_nb}neurons_{args.layers}layers_plot.png')
