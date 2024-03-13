@@ -52,7 +52,7 @@ print("randomize sample observations")
 df = df.sample(frac=1, random_state=42)
 
 # Split your data into training and validation sets before using the generator
-test_size_downstream = 80000
+test_size_downstream = df.sample(frac = 0.1)
 inputs = df[['Query_allele', 'Array_allele']]
 output = df['Genetic_interaction_score']
 x_model, x_testing, y_model, y_testing = train_test_split(inputs, output, test_size=test_size_downstream, random_state = 42)
@@ -88,11 +88,13 @@ x_train, x_val, y_train, y_val = train_test_split(binary_inputs, output, test_si
 model = Sequential()
 
 # Add the first layer with input dimension
-model.add(Dense(neuron_nb, activation='relu', input_dim=x_train.shape[1]))
-model.add(Dense(813, activation = 'relu'))
+model.add(Dense(neuron_nb, activation='tanh', input_dim=x_train.shape[1]))
+#model.add(Dense(813, activation = 'relu'))
 # Add 10 hidden layers
 for _ in range(args.layers):
-    model.add(Dense(813, activation='relu'))
+  neuron_nb //= 2
+  neuron_nb = int(neuron_nb)
+  model.add(Dense(neuron_nb, activation='tanh'))
 
 # Add the final output layer
 model.add(Dense(1, activation='linear'))
