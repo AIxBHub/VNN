@@ -118,7 +118,7 @@ history = model.fit(train_data_generator, epochs=args.epochs, validation_data=va
 score = model.evaluate(val_data_generator)
 
 # Save model
-save_model_with_filename(model, neuron_nb, batch=batch_file, directory=args.directory, epochs=args.epochs, layer=args.layers)
+save_model_with_filename(model, neuron_nb, batch=batch_file, directory=args.directory, percent=args.percent, epochs=args.epochs, layer=args.layers)
 
 # Make predictions using the trained model
 predictions = model.predict(x_val)
