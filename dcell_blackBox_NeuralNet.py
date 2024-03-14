@@ -4,6 +4,7 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras.utils import Sequence
 from keras.optimizers import Adam
+from keras.callbacks import ReduceLROnPlateau
 from sklearn.model_selection import train_test_split, cross_val_score
 import matplotlib.pyplot as plt
 import pickle
@@ -103,19 +104,28 @@ for _ in range(args.layers):
   neuron_nb //= 2
   neuron_nb = int(neuron_nb)
   model.add(Dense(neuron_nb, activation='tanh'))
-
 # Add the final output layer
 model.add(Dense(1, activation='linear'))
 
+#Rate scheduler 
+reduce_lr = ReduceLROnPlateau(factor=0.5, patience=3, min_lr=0.0001)  # Adjust parameters as needed
+
+#Set learning rate
+learning_rate = 0.001
+optimizer = Adam(lr=learning_rate)
+
 # Compile the model
-model.compile(optimizer='adam', loss='mean_squared_error')
+model.compile(optimizer=optimizer, loss='mean_squared_error')
 batch_size = 10000
+batch_file = batch_size/1000
+
 print("Create data generators")
 train_data_generator = DataGenerator(x_train, y_train, batch_size=batch_size)
 val_data_generator = DataGenerator(x_val, y_val, batch_size=batch_size)
-batch_file = batch_size/1000
+
+#Train model
 print("Train the model using data generators")
-history = model.fit(train_data_generator, epochs=args.epochs, validation_data=val_data_generator)
+history = model.fit(train_data_generator, epochs=args.epochs, validation_data=val_data_generator, callbacks=[reduce_lr])
 
 # Save the history object to a file
 # with open(f'{args.directory}/training_history.pkl', 'wb') as history_file:
