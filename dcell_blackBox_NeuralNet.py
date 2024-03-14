@@ -18,6 +18,7 @@ parser.add_argument('--epochs', type=int, default=20, help='Number of epochs (de
 parser.add_argument('--layers', type=int, default=9, help='Number of layers (default: 9)')
 parser.add_argument('--filename', type=str, required=True, help='CSV file to read')
 parser.add_argument('--percent', type=int, required=True, help='Percent of Data')
+parser.add_argument('--label', type=str, help='Output label')
 args = parser.parse_args()
 
 # Load and preprocess the data
@@ -55,7 +56,7 @@ df = df.sample(frac=1, random_state=42)
 # Split your data into training and validation sets before using the generator
 test_size_downstream = len(df.sample(frac = 0.1))
 inputs = df[['Query_allele', 'Array_allele']]
-output = df['Genetic_interaction_score']
+output = df[args.label]
 x_model, x_testing, y_model, y_testing = train_test_split(inputs, output, test_size=test_size_downstream, random_state = 42)
 
 # delete dataframe
@@ -72,11 +73,11 @@ if not os.path.exists(directory):
     os.makedirs(directory)
     
 training_set_indexes_df = pd.DataFrame({'Index': training_set_indexes})
-training_set_indexes_df.to_csv(f'{args.directory}/{args.percent}_percent/training_set_indexes.csv', index=False)
+training_set_indexes_df.to_csv(f'{args.directory}/{args.percent}_percent/{args.label}_training_set_indexes.csv', index=False)
 
 # Save validation data to a CSV file
-x_testing.to_csv(f'{args.directory}/{args.percent}_percent/{args.layers}layers_{args.epochs}epochs_alldata_test_x.csv', index=False)
-y_testing.to_csv(f'{args.directory}/{args.percent}_percent/{args.layers}layers_{args.epochs}epochs_alldata_test_y.csv', index=False)
+x_testing.to_csv(f'{args.directory}/{args.percent}_percent/{args.label}_{args.layers}layers_{args.epochs}epochs_alldata_test_x.csv', index=False)
+y_testing.to_csv(f'{args.directory}/{args.percent}_percent/{args.label}_{args.layers}layers_{args.epochs}epochs_alldata_test_y.csv', index=False)
 
 #gets first layer number of neurons based on total number of alleles
 neuron_nb = len(set(x_model['Query_allele']).union(set(x_model['Array_allele'])))
@@ -124,7 +125,7 @@ history = model.fit(train_data_generator, epochs=args.epochs, validation_data=va
 score = model.evaluate(val_data_generator)
 
 # Save model
-save_model_with_filename(model, neurons, batch=batch_file, directory=args.directory, percent=args.percent, epochs=args.epochs, layer=args.layers)
+save_model_with_filename(model, neurons, batch=batch_file, directory=args.directory, label=args.label, percent=args.percent, epochs=args.epochs, layer=args.layers)
 
 # Make predictions using the trained model
 predictions = model.predict(x_val)
@@ -134,4 +135,4 @@ plt.plot(history.history['loss'], label='Training Loss')
 plt.plot(history.history['val_loss'], label='Validation Loss')
 plt.legend()
 plt.show()
-plt.savefig(f'{args.directory}/{args.percent}_percent/rawData_{args.directory}_{batch_file}kbatch_{args.epochs}Epoch_{neuron_nb}neurons_{args.layers}layers_plot.png')
+plt.savefig(f'{args.directory}/{args.percent}_percent/rawData_{args.directory}_{args.label}_{batch_file}kbatch_{args.epochs}Epoch_{neurons}neurons_{args.layers}layers_plot.png')
