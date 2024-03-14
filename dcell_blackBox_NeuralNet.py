@@ -65,6 +65,12 @@ del df
 training_set_indexes = x_testing.index.tolist()
 
 # Save the indexes of the training set to a CSV file
+directory = f"{args.directory}/{args.percent}_percent/"
+
+# Check if the directory exists, if not, create it
+if not os.path.exists(directory):
+    os.makedirs(directory)
+    
 training_set_indexes_df = pd.DataFrame({'Index': training_set_indexes})
 training_set_indexes_df.to_csv(f'{args.directory}/{args.percent}_percent/training_set_indexes.csv', index=False)
 
