@@ -74,7 +74,7 @@ y_testing.to_csv(f'{args.directory}/{args.percent}_percent/{args.layers}layers_{
 
 #gets first layer number of neurons based on total number of alleles
 neuron_nb = len(set(x_model['Query_allele']).union(set(x_model['Array_allele'])))
-
+neurons = neuron_nb
 print("Call function to create binary matrix for input")
 binary_inputs = create_binary_matrix(x_model, 'Query_allele', 'Array_allele')
 output = pd.DataFrame(y_model)
@@ -118,7 +118,7 @@ history = model.fit(train_data_generator, epochs=args.epochs, validation_data=va
 score = model.evaluate(val_data_generator)
 
 # Save model
-save_model_with_filename(model, neuron_nb, batch=batch_file, directory=args.directory, percent=args.percent, epochs=args.epochs, layer=args.layers)
+save_model_with_filename(model, neurons, batch=batch_file, directory=args.directory, percent=args.percent, epochs=args.epochs, layer=args.layers)
 
 # Make predictions using the trained model
 predictions = model.predict(x_val)
