@@ -1,16 +1,19 @@
 import pandas as pd
-from utils import create_binary_matrix, DataGenerator, split_data_generator, save_model_with_filename
+from utils import *
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.utils import Sequence
 from keras.optimizers import Adam
-from keras.callbacks import ReduceLROnPlateau
+from keras.callbacks import ReduceLROnPlateau, EarlyStopping
+from keras import ops
 from sklearn.model_selection import train_test_split, cross_val_score
 import matplotlib.pyplot as plt
 import pickle
 import argparse
 import os
 import glob
+import scipy
+
 
 # Add arguments for the directory and neuron number
 parser = argparse.ArgumentParser()
@@ -52,10 +55,10 @@ print("Number of columns:", num_columns)
 df.memory_usage(deep=True).sum()
 
 print("randomize sample observations")
-df = df.sample(frac=1, random_state=42)
+df = df.sample(frac=1, random_state=42)  # Randomize dataset 
 
 # Split your data into training and validation sets before using the generator
-test_size_downstream = len(df.sample(frac = 0.1))
+test_size_downstream = len(df.sample(frac = 0.1, random_state = 42))  #Set seed number
 inputs = df[['Query_allele', 'Array_allele']]
 output = df[args.label]
 x_model, x_testing, y_model, y_testing = train_test_split(inputs, output, test_size=test_size_downstream, random_state = 42)
@@ -64,7 +67,7 @@ x_model, x_testing, y_model, y_testing = train_test_split(inputs, output, test_s
 del df
 
 # Record the indexes of the training set
-training_set_indexes = x_testing.index.tolist()
+test_set_indexes = x_testing.index.tolist()
 
 # Save the indexes of the training set to a CSV file
 directory = f"{args.directory}/{args.percent}_percent/"
@@ -73,8 +76,8 @@ directory = f"{args.directory}/{args.percent}_percent/"
 if not os.path.exists(directory):
     os.makedirs(directory)
     
-training_set_indexes_df = pd.DataFrame({'Index': training_set_indexes})
-training_set_indexes_df.to_csv(f'{args.directory}/{args.percent}_percent/{args.label}_training_set_indexes.csv', index=False)
+test_set_indexes_df = pd.DataFrame({'Index': test_set_indexes})
+test_set_indexes_df.to_csv(f'{args.directory}/{args.percent}_percent/{args.label}_test_set_indexes.csv', index=False)
 
 # Save validation data to a CSV file
 x_testing.to_csv(f'{args.directory}/{args.percent}_percent/{args.label}_{args.layers}layers_{args.epochs}epochs_alldata_test_x.csv', index=False)
@@ -100,7 +103,7 @@ model = Sequential()
 model.add(Dense(neuron_nb, activation='tanh', input_dim=x_train.shape[1]))
 #model.add(Dense(813, activation = 'relu'))
 # Add 10 hidden layers
-for _ in range(args.layers):
+for _ in range(args.layers):        #Visualize structure
   neuron_nb //= 2
   neuron_nb = int(neuron_nb)
   model.add(Dense(neuron_nb, activation='tanh'))
@@ -110,12 +113,6 @@ model.add(Dense(1, activation='linear'))
 #Rate scheduler 
 reduce_lr = ReduceLROnPlateau(factor=0.5, patience=3, min_lr=0.0001)  # Adjust parameters as needed
 
-#Set learning rate
-learning_rate = 0.001
-optimizer = Adam(lr=learning_rate)
-
-# Compile the model
-model.compile(optimizer=optimizer, loss='mean_squared_error')
 batch_size = 10000
 batch_file = batch_size/1000
 
@@ -123,9 +120,21 @@ print("Create data generators")
 train_data_generator = DataGenerator(x_train, y_train, batch_size=batch_size)
 val_data_generator = DataGenerator(x_val, y_val, batch_size=batch_size)
 
+# Set learning rate
+learning_rate = 0.001
+optimizer = Adam(lr=learning_rate)
+
+stopEarly = keras.callbacks.EarlyStopping(monitor='loss', patience=3)
+
+# Create the callback instance
+pearson_callback = PearsonCorrelationCallback(validation_data=(val_dat_generator))
+
+# Compile the model
+model.compile(optimizer=optimizer, loss='mean_squared_error')
+
 #Train model
 print("Train the model using data generators")
-history = model.fit(train_data_generator, epochs=args.epochs, validation_data=val_data_generator, callbacks=[reduce_lr])
+history = model.fit(train_data_generator, epochs=args.epochs, validation_data=val_data_generator, callbacks=[reduce_lr, pearson_callback])
 
 # Save the history object to a file
 # with open(f'{args.directory}/training_history.pkl', 'wb') as history_file:
