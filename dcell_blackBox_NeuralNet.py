@@ -123,10 +123,10 @@ val_data_generator = DataGenerator(x_val, y_val, batch_size=batch_size)
 learning_rate = 0.001
 optimizer = Adam(lr=learning_rate)
 
-stopEarly = keras.callbacks.EarlyStopping(monitor='loss', patience=3)
+stopEarly = EarlyStopping(monitor='loss', patience=3)
 
 # Create the callback instance
-pearson_callback = PearsonCorrelationCallback(validation_data=(val_dat_generator))
+pearson_callback = PearsonCorrelationCallback(validation_data=(val_data_generator))
 
 # Compile the model
 model.compile(optimizer=optimizer, loss='mean_squared_error')

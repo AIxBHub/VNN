@@ -8,14 +8,14 @@ from tensorflow.keras.callbacks import Callback
 
 
 class PearsonCorrelationCallback(Callback):
-    def __init__(self, validation_data):
+    def __init__(self, validation_data_generator):
         super(PearsonCorrelationCallback, self).__init__()
-        self.validation_data = validation_data
+        self.validation_data_generator = validation_data_generator
 
     def on_epoch_end(self, epoch, logs=None):
-        x_val, y_val = self.validation_data
-        predictions = np.squeeze(self.model.predict(x_val))
-        pearson_corr = np.corrcoef(y_val, predictions)[0, 1]
+        x_val_batch, y_val_batch = self.validation_data_generator[0]
+        predictions = np.squeeze(self.model.predict(x_val_batch))
+        pearson_corr = np.corrcoef(y_val_batch, predictions)[0, 1]
         print(f'Pearson correlation coefficient: {pearson_corr}')
 
 
