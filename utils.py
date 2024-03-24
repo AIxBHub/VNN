@@ -3,6 +3,21 @@ from scipy.sparse import csr_matrix
 from collections import defaultdict
 from keras.utils import Sequence
 import numpy as np
+import tensorflow.keras.backend as K
+from tensorflow.keras.callbacks import Callback
+
+
+class PearsonCorrelationCallback(Callback):
+    def __init__(self, validation_data):
+        super(PearsonCorrelationCallback, self).__init__()
+        self.validation_data = validation_data
+
+    def on_epoch_end(self, epoch, logs=None):
+        x_val, y_val = self.validation_data
+        predictions = np.squeeze(self.model.predict(x_val))
+        pearson_corr = np.corrcoef(y_val, predictions)[0, 1]
+        print(f'Pearson correlation coefficient: {pearson_corr}')
+
 
 def save_model_with_filename(model, neuron_nb, directory, label, percent, epochs, batch, layer):
     
