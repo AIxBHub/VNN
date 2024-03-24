@@ -7,16 +7,10 @@ import tensorflow.keras.backend as K
 from tensorflow.keras.callbacks import Callback
 
 
-class PearsonCorrelationCallback(Callback):
-    def __init__(self, validation_data_generator):
-        super(PearsonCorrelationCallback, self).__init__()
-        self.validation_data_generator = validation_data_generator
-
-    def on_epoch_end(self, epoch, logs=None):
-        x_val_batch, y_val_batch = self.validation_data_generator[0]
-        predictions = np.squeeze(self.model.predict(x_val_batch))
-        pearson_corr = np.corrcoef(y_val_batch, predictions)[0, 1]
-        print(f'Pearson correlation coefficient: {pearson_corr}')
+def r2_score(y_true, y_pred):
+    SS_res =  K.sum(K.square(y_true - y_pred)) 
+    SS_tot = K.sum(K.square(y_true - K.mean(y_true))) 
+    return ( 1 - SS_res/(SS_tot + K.epsilon()) )
 
 
 def save_model_with_filename(model, neuron_nb, directory, label, percent, epochs, batch, layer):

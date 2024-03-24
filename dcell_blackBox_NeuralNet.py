@@ -125,15 +125,12 @@ optimizer = Adam(lr=learning_rate)
 
 stopEarly = EarlyStopping(monitor='loss', patience=3)
 
-# Create the callback instance
-pearson_callback = PearsonCorrelationCallback(validation_data=(val_data_generator))
-
 # Compile the model
-model.compile(optimizer=optimizer, loss='mean_squared_error')
+model.compile(optimizer=optimizer, loss='mean_squared_error', metrics=[r2_score])
 
 #Train model
 print("Train the model using data generators")
-history = model.fit(train_data_generator, epochs=args.epochs, validation_data=val_data_generator, callbacks=[reduce_lr, pearson_callback])
+history = model.fit(train_data_generator, epochs=args.epochs, validation_data=val_data_generator, callbacks=[reduce_lr, stopEarly])
 
 # Save the history object to a file
 # with open(f'{args.directory}/training_history.pkl', 'wb') as history_file:
