@@ -59,11 +59,11 @@ df = df.sample(frac=1, random_state=42)  # Randomize dataset
 # Split your data into training and validation sets before using the generator
 test_size_downstream = len(df.sample(frac = 0.1, random_state = 42))  #Set seed number
 inputs = df[['Query_allele', 'Array_allele']]
-if args.label == "Double_mutant_fitness":
-  output = np.log(df[args.label])
-else:
-  output = df[args.label]
-
+# if args.label == "Double_mutant_fitness":
+#   output = np.log(df[args.label])
+# else:
+#   output = df[args.label]
+output = df[args.label]
 x_model, x_testing, y_model, y_testing = train_test_split(inputs, output, test_size=test_size_downstream, random_state = 42)
 
 # delete dataframe
@@ -130,7 +130,7 @@ optimizer = Adam(lr=learning_rate)
 stopEarly = EarlyStopping(monitor='loss', patience=3)
 
 # Compile the model
-model.compile(optimizer=optimizer, loss='mean_squared_error', metrics=[r2_score])
+model.compile(optimizer=optimizer, loss='mean_squared_error', metrics=[r2score])
 
 #Train model
 print("Train the model using data generators")
