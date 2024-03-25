@@ -5,8 +5,9 @@ library(tidyr)
 library(dplyr)
 
 BiocManager::install("ctc")
-
 library(data.table)
+# Point to data source
+setwd("~/RENCI/CreativityHub_NNetworks")
 s1 <- fread("Data File S1. Raw genetic interaction datasets: Pair-wise interaction format/SGA_DAmP.txt")
 # 
 s1_2 <- fread("Data File S1. Raw genetic interaction datasets: Pair-wise interaction format/SGA_ExE.txt")
@@ -16,13 +17,6 @@ s1_3 <- fread("Data File S1. Raw genetic interaction datasets: Pair-wise interac
 s1_4 <- fread("Data File S1. Raw genetic interaction datasets: Pair-wise interaction format/SGA_NxN.txt")
 
 allData <- rbind(s1,s1_2,s1_3,s1_4)
-
-# s3 <- fread("Data File S3. Genetic interaction profile similarity matrices/cc_ALL.txt")
-# s3
-# s3_2 <- fread("Data File S3. Genetic interaction profile similarity matrices/cc_EE.txt")
-# s3_2
-# s3_4 <- fread("Data File S3. Genetic interaction profile similarity matrices/cc_NN.txt")
-# s3_4
 
 tempDat <- allData
 tempDat <- tempDat[,c(1,3,10,6,7)]
@@ -79,23 +73,31 @@ condensed_data <- data.table(
 # condensed_data <- separate(condensed_data, allele_pair, 
 #                            into = c("Query_allele", "Array_allele"), sep = "_")
 
-write.csv(condensed_data, "AllData_lowestPval_weightedPval.csv")
+setwd("~/PGC_renci/dariusmb/AIxB/input_files")
+
+# write.csv(condensed_data, "AllData_lowestPval_weightedPval.csv")
 
 allele_list <- readLines("../20231219_final_gene_list.txt")
 allele_list <- as.list(allele_list)
 
-# Set the percentage of genes to sample
-percentage_to_sample <- 0.75 
+# List of percentage values
+percentages <- c(25, 50, 75, 100)
 
-# Randomly sample genes
-set.seed(123)  
-sampled_genes <- sample(allele_list, size = round(length(allele_list) * percentage_to_sample))
-
-# Filter the dataset based on the sampled genes for both columns
-filtered_data <- condensed_data %>% 
-  filter(Query_allele %in% sampled_genes & Array_allele %in% sampled_genes)
-
-# Write the sampled gene list to a file
-write.csv(sampled_genes, "Sampled_gene_list_75percent.txt")
-
-write.csv(filtered_data, "AllData_lowestPval_weightedPval_filtered_sampled_75percent.csv")
+# Iterate over each percentage value
+for (percent in percentages) {
+  # Set the percentage of genes to sample
+  percentage_to_sample <- percent / 100
+  
+  # Randomly sample genes
+  set.seed(123)  
+  sampled_genes <- sample(allele_list, size = round(length(allele_list) * percentage_to_sample))
+  
+  # Filter the dataset based on the sampled genes for both columns
+  filtered_data <- condensed_data %>% 
+    filter(Query_allele %in% sampled_genes & Array_allele %in% sampled_genes)
+  
+  # Write the sampled gene list to a file
+  write.csv(sampled_genes, paste0("ExE_Sampled_gene_list_", percent, "percent.txt"))
+  
+  write.csv(filtered_data, paste0("ExE_lowestPval_weightedPval_", percent, "percent.csv"))
+}
