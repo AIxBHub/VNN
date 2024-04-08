@@ -134,15 +134,15 @@ model.compile(optimizer=optimizer, loss='mean_squared_error', metrics=[r2score])
 
 
 # Before the first epoch
-predictions_before_training = model.predict(x_val)
+predictions_before_training_val = model.predict(x_val)
+predictions_before_training_test = model.predict(x_testing)
 
-#Train model
-print("Train the model using data generators")
+# Train the model for one epoch
 history = model.fit(train_data_generator, epochs=1, validation_data=val_data_generator, callbacks=[reduce_lr, stopEarly])
 
 # After the first epoch
-predictions_after_training = model.predict(x_val)
-
+predictions_after_training_val = model.predict(x_val)
+predictions_after_training_test = model.predict(x_testing)
 
 # Evaluate the model
 score = model.evaluate(val_data_generator)
@@ -151,19 +151,38 @@ score = model.evaluate(val_data_generator)
 save_model_with_filename(model, neurons, batch=batch_file, directory=args.directory, label=args.label, percent=args.percent, epochs=args.epochs, layer=args.layers)
 
 # Plotting
-plt.figure(figsize=(10, 5))
+plt.figure(figsize=(15, 5))
 
 plt.subplot(1, 2, 1)
-plt.scatter(y_val, predictions_before_training, color='blue')
-plt.title('Before First Epoch')
+plt.scatter(y_val, predictions_before_training_val, color='blue')
+plt.title('Before First Epoch (Validation Data)')
 plt.xlabel('Real Values')
 plt.ylabel('Predicted Values')
-plt.savefig(f'{args.directory}/{args.percent}_percent/Real_vs_Expected_PreEpoch_{args.directory}_{args.label}_{batch_file}kbatch_{args.epochs}Epoch_{neurons}neurons_{args.layers}layers_plot.png')
+plt.savefig('before_first_epoch_validation.png')
 
 plt.subplot(1, 2, 2)
-plt.scatter(y_val, predictions_after_training, color='red')
-plt.title('After First Epoch')
+plt.scatter(y_testing, predictions_before_training_test, color='blue')
+plt.title('Before First Epoch (Testing Data)')
 plt.xlabel('Real Values')
 plt.ylabel('Predicted Values')
-plt.savefig(f'{args.directory}/{args.percent}_percent/Real_vs_Expected_PostEpoch_{args.directory}_{args.label}_{batch_file}kbatch_{args.epochs}Epoch_{neurons}neurons_{args.layers}layers_plot.png')
+plt.savefig('before_first_epoch_testing.png')
+
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(15, 5))
+
+plt.subplot(1, 2, 1)
+plt.scatter(y_val, predictions_after_training_val, color='red')
+plt.title('After First Epoch (Validation Data)')
+plt.xlabel('Real Values')
+plt.ylabel('Predicted Values')
+plt.savefig('after_first_epoch_validation.png')
+
+plt.subplot(1, 2, 2)
+plt.scatter(y_testing, predictions_after_training_test, color='red')
+plt.title('After First Epoch (Testing Data)')
+plt.xlabel('Real Values')
+plt.ylabel('Predicted Values')
+plt.savefig('after_first_epoch_testing.png')
 
