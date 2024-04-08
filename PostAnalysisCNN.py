@@ -11,6 +11,7 @@ import dask.array as da
 import statsmodels.api as sm
 from collections import defaultdict
 from scipy.sparse import csr_matrix
+#from utils import create_binary_matrix
 
 
 h5_dir = '.'
@@ -29,19 +30,22 @@ else:
 
 
 # Define the CSV file path for validation_x
-csv_file_path = 'alldata_test_x.csv'
+csv_file_path = glob.glob(os.path.join(h5_dir,'*x.csv'))[0]
 
 # Define the number of rows to load
 # rows_to_load = 100000  # Adjust the number of rows based on your testing needs
 
 # Read a portion of the CSV file
-X_val_sample = pd.read_csv(csv_file_path)
+x_val = pd.read_csv(csv_file_path)
+x_val = create_binary_matrix(x_val, 'Query_allele', 'Array_allele')
+# Assuming 'x_val' columns are the same as the CSV file
+predictions = model.predict(x_val)
 
-# Assuming 'X_val' columns are the same as the CSV file
-predictions = model.predict(X_val_sample)
-
+y_val = glob.glob(os.path.join(h5_dir,'*y.csv'))[0]
 # Load the labels directly from the CSV file
-validation_y = pd.read_csv('alldata_test_y.csv')['Double_mutant_fitness'].values
+#validation_y = pd.read_csv(y_val)['Double_mutant_fitness'].values
+validation_y = pd.read_csv(y_val)['Genetic_interaction_score'].values
+
 
 # Evaluate the model using regression metrics
 mse = mean_squared_error(validation_y, predictions)
