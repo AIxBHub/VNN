@@ -158,9 +158,12 @@ plt.scatter(y_val, predictions_before_training, color='blue')
 plt.title('Before First Epoch')
 plt.xlabel('Real Values')
 plt.ylabel('Predicted Values')
+plt.savefig(f'{args.directory}/{args.percent}_percent/Real_vs_Expected_PreEpoch_{args.directory}_{args.label}_{batch_file}kbatch_{args.epochs}Epoch_{neurons}neurons_{args.layers}layers_plot.png')
 
 plt.subplot(1, 2, 2)
 plt.scatter(y_val, predictions_after_training, color='red')
 plt.title('After First Epoch')
 plt.xlabel('Real Values')
 plt.ylabel('Predicted Values')
+plt.savefig(f'{args.directory}/{args.percent}_percent/Real_vs_Expected_PostEpoch_{args.directory}_{args.label}_{batch_file}kbatch_{args.epochs}Epoch_{neurons}neurons_{args.layers}layers_plot.png')
+
