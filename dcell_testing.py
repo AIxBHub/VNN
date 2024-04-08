@@ -135,14 +135,14 @@ model.compile(optimizer=optimizer, loss='mean_squared_error', metrics=[r2score])
 
 # Before the first epoch
 predictions_before_training_val = model.predict(x_val)
-predictions_before_training_test = model.predict(x_testing)
+predictions_before_training_train = model.predict(x_train)
 
 # Train the model for one epoch
 history = model.fit(train_data_generator, epochs=1, validation_data=val_data_generator, callbacks=[reduce_lr, stopEarly])
 
 # After the first epoch
 predictions_after_training_val = model.predict(x_val)
-predictions_after_training_test = model.predict(x_testing)
+predictions_after_training_train = model.predict(x_train)
 
 # Evaluate the model
 score = model.evaluate(val_data_generator)
@@ -161,7 +161,7 @@ plt.ylabel('Predicted Values')
 plt.savefig('before_first_epoch_validation.png')
 
 plt.subplot(1, 2, 2)
-plt.scatter(y_testing, predictions_before_training_test, color='blue')
+plt.scatter(y_testing, predictions_before_training_train, color='blue')
 plt.title('Before First Epoch (Testing Data)')
 plt.xlabel('Real Values')
 plt.ylabel('Predicted Values')
@@ -180,7 +180,7 @@ plt.ylabel('Predicted Values')
 plt.savefig('after_first_epoch_validation.png')
 
 plt.subplot(1, 2, 2)
-plt.scatter(y_testing, predictions_after_training_test, color='red')
+plt.scatter(y_testing, predictions_after_training_train, color='red')
 plt.title('After First Epoch (Testing Data)')
 plt.xlabel('Real Values')
 plt.ylabel('Predicted Values')
