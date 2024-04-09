@@ -150,7 +150,7 @@ score = model.evaluate(val_data_generator)
 # Save model
 save_model_with_filename(model, neurons, batch=batch_file, directory=args.directory, label=args.label, percent=args.percent, epochs=args.epochs, layer=args.layers)
 
-plt.figure(figsize=(20, 10))
+plt.figure(figsize=(30, 10))
 
 plt.subplot(1, 3, 1)
 sns.kdeplot(y_val.values.flatten(), color='red', alpha = 0.5, label = 'Real Values (Validation)')
