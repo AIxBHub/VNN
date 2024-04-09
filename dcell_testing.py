@@ -12,7 +12,7 @@ import argparse
 import os
 import glob
 import scipy
-
+import seaborn as sns
 
 # Add arguments for the directory and neuron number
 parser = argparse.ArgumentParser()
