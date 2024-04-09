@@ -138,7 +138,7 @@ predictions_before_training_val = model.predict(x_val)
 predictions_before_training_train = model.predict(x_train)
 
 # Train the model for one epoch
-history = model.fit(train_data_generator, epochs=1, validation_data=val_data_generator, callbacks=[reduce_lr, stopEarly])
+history = model.fit(train_data_generator, epochs=5, validation_data=val_data_generator, callbacks=[reduce_lr, stopEarly])
 
 # After the first epoch
 predictions_after_training_val = model.predict(x_val)
