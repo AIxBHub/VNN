@@ -177,8 +177,4 @@ save_model_with_filename(model, neurons, batch=batch_file, directory=args.direct
 # plt.ylabel('Density')
 # plt.legend()
 
-<<<<<<< HEAD
-plt.savefig('overlayed_distributions_realValue.png')
-=======
 # plt.savefig('overlayed_distributions_realValue.png')
->>>>>>> b99a137 (comment out figure building)
