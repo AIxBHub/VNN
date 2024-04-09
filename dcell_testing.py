@@ -150,31 +150,31 @@ score = model.evaluate(val_data_generator)
 # Save model
 save_model_with_filename(model, neurons, batch=batch_file, directory=args.directory, label=args.label, percent=args.percent, epochs=args.epochs, layer=args.layers)
 
-# plt.figure(figsize=(40, 10))
-# 
-# plt.subplot(1, 3, 1)
-# sns.kdeplot(y_val.values.flatten(), color='red', alpha = 0.5, label = 'Real Values (Validation)')
-# sns.kdeplot(y_train.values.flatten(), color='green', alpha = 0.5, label = 'Real Values (Training)')
-# plt.xlabel('Values')
-# plt.ylabel('Density')
-# plt.legend()
-# 
-# # Plotting before first epoch
-# plt.subplot(1, 3, 2)
-# sns.kdeplot(predictions_before_training_val.flatten(), color='red', alpha=0.5, label='Predicted Values (Validation)')
-# sns.kdeplot(predictions_before_training_train.flatten(), color='blue', alpha=0.5, label='Predicted Values (Training)')
-# plt.title('Before First Epoch')
-# plt.xlabel('Values')
-# plt.ylabel('Density')
-# plt.legend()
-# 
-# # Plotting after first epoch
-# plt.subplot(1, 3, 3)
-# sns.kdeplot(predictions_after_training_val.flatten(), color='red', alpha=0.5, label='Predicted Values (Validation)')
-# sns.kdeplot(predictions_after_training_train.flatten(), color='blue', alpha=0.5, label='Predicted Values (Training)')
-# plt.title('After First Epoch')
-# plt.xlabel('Values')
-# plt.ylabel('Density')
-# plt.legend()
+plt.figure(figsize=(15, 10))
+sns.kdeplot(y_val.values.flatten(), color='red', alpha = 0.5, label = 'Real Values (Validation)')
+sns.kdeplot(y_train.values.flatten(), color='green', alpha = 0.5, label = 'Real Values (Training)')
+plt.xlabel('Values')
+plt.ylabel('Density')
+plt.legend()
+plt.savefig("distributions_val_vs_training_real.png")
 
-# plt.savefig('overlayed_distributions_realValue.png')
+plt.figure(figsize=(15, 10))
+# Plotting before first epoch
+plt.subplot(1, 2, 1)
+sns.kdeplot(predictions_before_training_val.flatten(), color='red', alpha=0.5, label='Predicted Values (Validation)')
+sns.kdeplot(predictions_before_training_train.flatten(), color='blue', alpha=0.5, label='Predicted Values (Training)')
+plt.title('Before First Epoch')
+plt.xlabel('Values')
+plt.ylabel('Density')
+plt.legend()
+
+# Plotting after first epoch
+plt.subplot(1, 2, 2)
+sns.kdeplot(predictions_after_training_val.flatten(), color='red', alpha=0.5, label='Predicted Values (Validation)')
+sns.kdeplot(predictions_after_training_train.flatten(), color='blue', alpha=0.5, label='Predicted Values (Training)')
+plt.title('After First Epoch')
+plt.xlabel('Values')
+plt.ylabel('Density')
+plt.legend()
+
+plt.savefig('overlayed_distributions_realValue.png')
