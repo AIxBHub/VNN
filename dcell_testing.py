@@ -101,15 +101,15 @@ x_train, x_val, y_train, y_val = train_test_split(binary_inputs, output, test_si
 
 # Define the model architecture
 model = Sequential()
-
+activation = 'relu' #tanh
 # Add the first layer with input dimension
-model.add(Dense(neuron_nb, activation='tanh', input_dim=x_train.shape[1]))
+model.add(Dense(neuron_nb, activation=activation, input_dim=x_train.shape[1]))
 #model.add(Dense(813, activation = 'relu'))
 # Add 10 hidden layers
 for _ in range(args.layers):        #Visualize structure
   neuron_nb //= 2
   neuron_nb = int(neuron_nb)
-  model.add(Dense(neuron_nb, activation='tanh'))
+  model.add(Dense(neuron_nb, activation=activation))
 # Add the final output layer
 model.add(Dense(1, activation='linear'))
 
@@ -161,8 +161,8 @@ plt.ylabel('Predicted Values')
 plt.savefig('before_first_epoch_validation.png')
 
 plt.subplot(1, 2, 2)
-plt.scatter(y_testing, predictions_before_training_train, color='blue')
-plt.title('Before First Epoch (Testing Data)')
+plt.scatter(y_train, predictions_before_training_train, color='red')
+plt.title('Before First Epoch (Training Data)')
 plt.xlabel('Real Values')
 plt.ylabel('Predicted Values')
 plt.savefig('before_first_epoch_testing.png')
@@ -173,15 +173,15 @@ plt.show()
 plt.figure(figsize=(15, 5))
 
 plt.subplot(1, 2, 1)
-plt.scatter(y_val, predictions_after_training_val, color='red')
+plt.scatter(y_val, predictions_after_training_val, color='blue')
 plt.title('After First Epoch (Validation Data)')
 plt.xlabel('Real Values')
 plt.ylabel('Predicted Values')
 plt.savefig('after_first_epoch_validation.png')
 
 plt.subplot(1, 2, 2)
-plt.scatter(y_testing, predictions_after_training_train, color='red')
-plt.title('After First Epoch (Testing Data)')
+plt.scatter(y_train, predictions_after_training_train, color='red')
+plt.title('After First Epoch (Training Data)')
 plt.xlabel('Real Values')
 plt.ylabel('Predicted Values')
 plt.savefig('after_first_epoch_testing.png')
