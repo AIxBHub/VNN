@@ -29,7 +29,7 @@ dtypes = {'Query_allele': str, 'Array_allele': str, 'Double_mutant_fitness': flo
 chunksize = 100000  # Adjust the chunksize based on available memory and processing capabilities
 
 # Construct the full path to the CSV file
-file_path = os.path.join('input_files', args.filename)
+file_path = os.path.join('input_files_costanzo09', args.filename)
 
 data_chunks = pd.read_csv(file_path, delimiter=',', dtype=dtypes, chunksize=chunksize)
 
