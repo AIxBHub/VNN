@@ -6,6 +6,7 @@ from keras.utils import Sequence
 from keras.optimizers import Adam
 from keras.callbacks import ReduceLROnPlateau, EarlyStopping
 from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.metrics import accuracy_score
 import matplotlib.pyplot as plt
 import pickle
 import argparse
@@ -128,14 +129,14 @@ val_data_generator = DataGenerator(x_val, y_val, batch_size=batch_size)
 learning_rate = 0.001
 optimizer = Adam(lr=learning_rate)
 
-stopEarly = EarlyStopping(monitor='loss', patience=3)
+stopEarly = EarlyStopping(monitor='loss', patience=5)
 
 # Compile the model
-model.compile(optimizer=optimizer, loss='mean_squared_error', metrics=[r2score])
+model.compile(optimizer=optimizer, loss='mean_squared_error', metrics=[r2score, 'accuracy'])
 
 #Train model
 print("Train the model using data generators")
-history = model.fit(train_data_generator, epochs=args.epochs, validation_data=val_data_generator, callbacks=[reduce_lr, stopEarly])
+history = model.fit(train_data_generator, epochs=args.epochs, validation_data=val_data_generator, callbacks=[stopEarly])
 
 # Save the history object to a file
 # with open(f'{args.directory}/training_history.pkl', 'wb') as history_file:
@@ -155,4 +156,14 @@ plt.plot(history.history['loss'], label='Training Loss')
 plt.plot(history.history['val_loss'], label='Validation Loss')
 plt.legend()
 plt.show()
-plt.savefig(f'{args.directory}/{args.percent}_percent/rawData_{args.directory}_{args.label}_{batch_file}kbatch_{args.epochs}Epoch_{neurons}neurons_{args.layers}layers_plot.png')
+plt.savefig(f'{args.directory}/{args.percent}_percent/lossVSepochs_{args.directory}_{args.label}_{batch_file}kbatch_{args.epochs}Epoch_{neurons}neurons_{args.layers}layers_plot.png')
+
+# Plot the accuracy
+plt.plot(history.history['acc'])
+plt.plot(history.history['val_acc'])
+plt.title('Model accuracy')
+plt.ylabel('Accuracy')
+plt.xlabel('Epoch')
+plt.legend(['Train', 'Test'], loc='upper left')
+plt.show()
+plt.savefig(f'{args.directory}/{args.percent}_percent/accuracyVSepoch_{args.directory}_{args.label}_{batch_file}kbatch_{args.epochs}Epoch_{neurons}neurons_{args.layers}layers_plot.png')
