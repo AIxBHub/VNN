@@ -22,6 +22,7 @@ parser.add_argument('--layers', type=int, default=9, help='Number of layers (def
 parser.add_argument('--filename', type=str, required=True, help='CSV file to read')
 parser.add_argument('--percent', type=int, required=True, help='Percent of Data')
 parser.add_argument('--label', type=str, help='Output label')
+parser.add_argument('--batch', type=int, default=800, help='Batch Size')
 args = parser.parse_args()
 
 # Load and preprocess the data
@@ -29,7 +30,7 @@ dtypes = {'Query_allele': str, 'Array_allele': str, 'Double_mutant_fitness': flo
 chunksize = 100000  # Adjust the chunksize based on available memory and processing capabilities
 
 # Construct the full path to the CSV file
-file_path = os.path.join('input_files_costanzo09', args.filename)
+file_path = os.path.join('input_files_sythetic', args.filename)
 
 data_chunks = pd.read_csv(file_path, delimiter=',', dtype=dtypes, chunksize=chunksize)
 
@@ -116,7 +117,7 @@ model.add(Dense(1, activation='linear'))
 #Rate scheduler 
 reduce_lr = ReduceLROnPlateau(factor=0.5, patience=3, min_lr=0.0001)  # Adjust parameters as needed
 
-batch_size = 10000
+batch_size = args.batch
 batch_file = batch_size/1000
 
 print("Create data generators")
