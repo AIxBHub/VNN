@@ -20,7 +20,7 @@ def r2score(y_true, y_pred):
 def save_model_with_filename(model, neuron_nb, directory, label, percent, epochs, batch, layer):
     
     # Create the filename using the provided directory argument
-    filename = f'{directory}/{percent}_percent/rawData_{directory}_{label}_{epochs}epochs_{batch}1k_{neuron_nb}neurons_{layer}layers.h5'
+    filename = f'{directory}/{percent}_percent/rawData_{directory}_{label}_{epochs}epochs_{batch}k_{neuron_nb}neurons_{layer}layers.h5'
     
     # Save the model with the dynamic filename
     model.save(filename)
