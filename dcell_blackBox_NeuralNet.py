@@ -85,8 +85,8 @@ test_set_indexes_df = pd.DataFrame({'Index': test_set_indexes})
 test_set_indexes_df.to_csv(f'{args.directory}/{args.percent}_percent/{args.label}_test_set_indexes.csv', index=False)
 
 # Save validation data to a CSV file
-x_testing.to_csv(f'{args.directory}/{args.percent}_percent/{args.label}_{args.layers}layers_{args.epochs}epochs_alldata_test_x.csv', index=False)
-y_testing.to_csv(f'{args.directory}/{args.percent}_percent/{args.label}_{args.layers}layers_{args.epochs}epochs_alldata_test_y.csv', index=False)
+x_testing.to_csv(f'{args.directory}/{args.percent}_percent/{args.label}_{args.layers}layers_{args.epochs}epochs_{args.batch}batches_test_x.csv', index=False)
+y_testing.to_csv(f'{args.directory}/{args.percent}_percent/{args.label}_{args.layers}layers_{args.epochs}epochs_{args.batch}batches_test_y.csv', index=False)
 
 #gets first layer number of neurons based on total number of alleles
 neuron_nb = len(set(x_model['Query_allele']).union(set(x_model['Array_allele'])))
