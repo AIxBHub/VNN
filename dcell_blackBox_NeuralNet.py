@@ -105,13 +105,13 @@ x_train, x_val, y_train, y_val = train_test_split(binary_inputs, output, test_si
 model = Sequential()
 
 # Add the first layer with input dimension
-model.add(Dense(neuron_nb, activation='tanh', input_dim=x_train.shape[1]))
+model.add(Dense(neuron_nb, activation='relu', input_dim=x_train.shape[1]))
 #model.add(Dense(813, activation = 'relu'))
 # Add 10 hidden layers
 for _ in range(args.layers):        #Visualize structure
   neuron_nb //= 2
   neuron_nb = int(neuron_nb)
-  model.add(Dense(neuron_nb, activation='tanh'))
+  model.add(Dense(neuron_nb, activation='relu'))
 # Add the final output layer
 model.add(Dense(1, activation='linear'))
 
@@ -158,12 +158,12 @@ plt.legend()
 plt.show()
 plt.savefig(f'{args.directory}/{args.percent}_percent/lossVSepochs_{args.directory}_{args.label}_{batch_file}kbatch_{args.epochs}Epoch_{neurons}neurons_{args.layers}layers_plot.png')
 
-# Plot the accuracy
-plt.plot(history.history['acc'])
-plt.plot(history.history['val_acc'])
-plt.title('Model accuracy')
-plt.ylabel('Accuracy')
-plt.xlabel('Epoch')
-plt.legend(['Train', 'Test'], loc='upper left')
-plt.show()
-plt.savefig(f'{args.directory}/{args.percent}_percent/accuracyVSepoch_{args.directory}_{args.label}_{batch_file}kbatch_{args.epochs}Epoch_{neurons}neurons_{args.layers}layers_plot.png')
+# # Plot the accuracy
+# plt.plot(history.history['acc'])
+# plt.plot(history.history['val_acc'])
+# plt.title('Model accuracy')
+# plt.ylabel('Accuracy')
+# plt.xlabel('Epoch')
+# plt.legend(['Train', 'Test'], loc='upper left')
+# plt.show()
+# plt.savefig(f'{args.directory}/{args.percent}_percent/accuracyVSepoch_{args.directory}_{args.label}_{batch_file}kbatch_{args.epochs}Epoch_{neurons}neurons_{args.layers}layers_plot.png')
