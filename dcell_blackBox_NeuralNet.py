@@ -17,6 +17,7 @@ import scipy
 
 # Add arguments for the directory and neuron number
 parser = argparse.ArgumentParser()
+parser.add_argument('--inputFiles', type=str, help='directory of input files')
 parser.add_argument('--directory', type=str, help='Directory name')
 parser.add_argument('--epochs', type=int, default=20, help='Number of epochs (default: 20)')
 parser.add_argument('--layers', type=int, default=9, help='Number of layers (default: 9)')
@@ -31,7 +32,7 @@ dtypes = {'Query_allele': str, 'Array_allele': str, 'Double_mutant_fitness': flo
 chunksize = 100000  # Adjust the chunksize based on available memory and processing capabilities
 
 # Construct the full path to the CSV file
-file_path = os.path.join('input_files_sythetic', args.filename)
+file_path = os.path.join(args.inputFiles, args.filename)
 
 data_chunks = pd.read_csv(file_path, delimiter=',', dtype=dtypes, chunksize=chunksize)
 
