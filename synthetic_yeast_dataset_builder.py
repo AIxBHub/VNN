@@ -33,9 +33,6 @@ args = parser.parse_args()
 G_0 = "GO:0044237"
 file_path = os.path.join(os.getcwd(),"20240426_0044237_ontology_v1")
 
-# Step 2: Find subclasses of G_0 (set P)
-# Code to retrieve subclasses of G_0 from Gene Ontology database or any other source
-
 P = extract_genes_for_root(file_path, G_0)
 
 # Step 3: Define parameters for the Gaussian distributions
@@ -46,6 +43,11 @@ delta = 1  # difference in mean between distributions f and g
 # Step 4: Read genes from file
 with open('../20231219_final_gene_list.txt', 'r') as f:
     all_genes = f.read().splitlines()
+
+subset_size = 300-len(P)
+all_genes_not_P = set(all_genes) - set(P)
+all_genes_subset = set(np.random.choice(list(all_genes_not_P), subset_size, replace=False))
+all_genes = list(all_genes_subset.union(P))
 
 # Step 5: Generate dataset
 N = 3000000  # number of samples
@@ -74,8 +76,8 @@ df_sub = pd.DataFrame(sub_dataset, columns=['Query_allele', 'Array_allele', 'Gen
 current_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 filename = f"synthetic_yeast_data_{G_0}_{current_datetime}_{len(dataset)/1000000}mil.csv"
 df.to_csv(filename, index=False)
-df_label = f'Full Synthetic Dist N:{len(dataset)}'
-dfsub_label =  f'Full Synthetic Dist N:{len(sub_dataset)}'
+df_label = f'Full Synthetic F Dist N:{len(dataset)}'
+dfsub_label =  f'G Dist N:{len(sub_dataset)}'
 fig_file = f"Synthetic_Yeast_data_{G_0}_{len(dataset)/1000000}mil.png"
 plt.figure(figsize=(15, 10))
 sns.kdeplot(df['Genetic_interaction_score'].values.flatten(), color='red', alpha = 0.5, label = df_label)
