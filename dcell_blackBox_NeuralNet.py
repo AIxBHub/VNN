@@ -127,7 +127,7 @@ val_data_generator = DataGenerator(x_val, y_val, batch_size=batch_size)
 
 # Set learning rate
 learning_rate = 0.001
-optimizer = Adam(lr=learning_rate)
+optimizer = Adam(learning_rate=learning_rate)
 
 stopEarly = EarlyStopping(monitor='loss', patience=5)
 
