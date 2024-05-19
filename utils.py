@@ -9,7 +9,7 @@ from tensorflow.keras.callbacks import Callback
 
 def r2score(x, y):
     xx = x - K.mean(x)
-    yy = y - k.mean(y)
+    yy = y - K.mean(y)
     x_norm = K.sqrt(K.sum(K.square(xx)))
     y_norm = K.sqrt(K.sum(K.square(yy)))
     # Calculate the dot product of the centered variables
