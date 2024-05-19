@@ -7,15 +7,16 @@ import tensorflow.keras.backend as K
 from tensorflow.keras.callbacks import Callback
 
 
-def r2_score(y_true, y_pred):
-    SS_res =  K.sum(K.square(y_true - y_pred)) 
-    SS_tot = K.sum(K.square(y_true - K.mean(y_true))) 
-    return ( 1 - SS_res/(SS_tot + K.epsilon()) )
-
-def r2score(y_true, y_pred):
-    sum_squares_residuals = K.sum((y_true - y_pred) ** 2)
-    sum_squares = K.sum((y_true - K.mean(y_true)) ** 2)
-    return(( 1 - sum_squares_residuals ) / sum_squares)
+def r2score(x, y):
+    xx = x - K.mean(x)
+    yy = y - k.mean(y)
+    x_norm = K.sqrt(K.sum(K.square(xx)))
+    y_norm = K.sqrt(K.sum(K.square(yy)))
+    # Calculate the dot product of the centered variables
+    dot_product = K.sum(xx * yy)
+    
+    return dot_product / (x_norm * y_norm)
+    
 
 def save_model_with_filename(model, neuron_nb, directory, label, percent, epochs, batch, layer):
     
