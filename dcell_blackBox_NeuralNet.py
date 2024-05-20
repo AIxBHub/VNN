@@ -133,7 +133,7 @@ optimizer = Adam(learning_rate=learning_rate)
 stopEarly = EarlyStopping(monitor='loss', patience=5)
 
 # Compile the model
-model.compile(optimizer=optimizer, loss='mean_squared_error', metrics=[r2score, 'accuracy'])
+model.compile(optimizer=optimizer, loss='mean_squared_error', metrics=[r2score])
 
 #Train model
 print("Train the model using data generators")
@@ -152,19 +152,31 @@ save_model_with_filename(model, neurons, batch=batch_file, directory=args.direct
 # Make predictions using the trained model
 predictions = model.predict(x_val)
 
-# Plot the scores
+# # Plot the scores
+# plt.plot(history.history['loss'], label='Training Loss')
+# plt.plot(history.history['val_loss'], label='Validation Loss')
+# plt.legend()
+# plt.show()
+# plt.savefig(f'{args.directory}/{args.percent}_percent/lossVSepochs_{args.directory}_{args.label}_{batch_file}kbatch_{args.epochs}Epoch_{neurons}neurons_{args.layers}layers_plot.png')
+
+# Plot the training and validation loss
+plt.figure()
 plt.plot(history.history['loss'], label='Training Loss')
 plt.plot(history.history['val_loss'], label='Validation Loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.title('Training and Validation Loss')
 plt.legend()
 plt.show()
 plt.savefig(f'{args.directory}/{args.percent}_percent/lossVSepochs_{args.directory}_{args.label}_{batch_file}kbatch_{args.epochs}Epoch_{neurons}neurons_{args.layers}layers_plot.png')
 
-# # Plot the accuracy
-# plt.plot(history.history['acc'])
-# plt.plot(history.history['val_acc'])
-# plt.title('Model accuracy')
-# plt.ylabel('Accuracy')
-# plt.xlabel('Epoch')
-# plt.legend(['Train', 'Test'], loc='upper left')
-# plt.show()
-# plt.savefig(f'{args.directory}/{args.percent}_percent/accuracyVSepoch_{args.directory}_{args.label}_{batch_file}kbatch_{args.epochs}Epoch_{neurons}neurons_{args.layers}layers_plot.png')
+# Plot the R2 score
+plt.figure()
+plt.plot(history.history['r2score'], label='Training Corr')
+plt.plot(history.history['val_r2score'], label='Validation Corr')
+plt.xlabel('Epochs')
+plt.ylabel('Pearson Correlation')
+plt.title('Training and Validation Correlation by Epoch')
+plt.legend()
+plt.show()
+plt.savefig(f'{args.directory}/{args.percent}_percent/r2scoreVSepoch_{args.directory}_{args.label}_{batch_file}kbatch_{args.epochs}Epoch_{neurons}neurons_{args.layers}layers_plot.png')
