@@ -55,6 +55,7 @@ print("Number of columns:", num_columns)
 # Sample data
 # df = data.sample(n = 50)
 df.memory_usage(deep=True).sum()
+df = df.drop_duplicates(subset=["Query_allele", "Array_allele"], keep="first")
 
 print("randomize sample observations")
 df = df.sample(frac=1, random_state=42)  # Randomize dataset 
