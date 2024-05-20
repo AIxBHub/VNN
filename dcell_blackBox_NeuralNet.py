@@ -57,7 +57,7 @@ print("Number of columns:", num_columns)
 df.memory_usage(deep=True).sum()
 
 print("randomize sample observations")
-df = df.sample(frac=0.25, random_state=42)  # Randomize dataset 
+df = df.sample(frac=1, random_state=42)  # Randomize dataset 
 
 # Split your data into training and validation sets before using the generator
 test_size_downstream = len(df.sample(frac = 0.1, random_state = 42))  #Set seed number
