@@ -31,6 +31,7 @@ args = parser.parse_args()
 
 # Step 1: Select top-level GO term
 G_0 = "GO:0044237"
+
 file_path = os.path.join(os.getcwd(),"20240426_0044237_ontology_v1")
 
 P = extract_genes_for_root(file_path, G_0)
@@ -44,10 +45,10 @@ delta = 1  # difference in mean between distributions f and g
 with open('../20231219_final_gene_list.txt', 'r') as f:
     all_genes = f.read().splitlines()
 
-subset_size = 300-len(P)
-all_genes_not_P = set(all_genes) - set(P)
-all_genes_subset = set(np.random.choice(list(all_genes_not_P), subset_size, replace=False))
-all_genes = list(all_genes_subset.union(P))
+# subset_size = 300-len(P)
+# all_genes_not_P = set(all_genes) - set(P)
+# all_genes_subset = set(np.random.choice(list(all_genes_not_P), subset_size, replace=False))
+# all_genes = list(all_genes_subset.union(P))
 
 # Step 5: Generate dataset
 N = 3000000  # number of samples
@@ -71,7 +72,9 @@ for _ in range(N):
     
     
 df = pd.DataFrame(dataset, columns=['Query_allele', 'Array_allele', 'Genetic_interaction_score','Distribution'])
+df = df.drop_duplicates(subset=["Query_allele", "Array_allele"], keep="first")
 df_sub = pd.DataFrame(sub_dataset, columns=['Query_allele', 'Array_allele', 'Genetic_interaction_score'])
+df_sub = df_sub.drop_duplicates(subset=["Query_allele", "Array_allele"], keep="first")
 
 current_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 filename = f"synthetic_yeast_data_{G_0}_{current_datetime}_{len(dataset)/1000000}mil.csv"
