@@ -107,13 +107,13 @@ x_train, x_val, y_train, y_val = train_test_split(binary_inputs, output, test_si
 model = Sequential()
 
 # Add the first layer with input dimension
-model.add(Dense(neuron_nb, activation='relu', input_dim=x_train.shape[1]))
+model.add(Dense(neuron_nb, activation='tanh', input_dim=x_train.shape[1]))
 #model.add(Dense(813, activation = 'relu'))
 # Add 10 hidden layers
 for _ in range(args.layers):        #Visualize structure
   neuron_nb //= 2
   neuron_nb = int(neuron_nb)
-  model.add(Dense(neuron_nb, activation='relu'))
+  model.add(Dense(neuron_nb, activation='tanh'))
 # Add the final output layer
 model.add(Dense(1, activation='linear'))
 
