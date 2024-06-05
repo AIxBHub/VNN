@@ -140,7 +140,7 @@ model.compile(optimizer=optimizer, loss='mean_squared_error', metrics=[r2score])
 checkpoint_file = f'{directory}/{args.percent}_percent/rawData_{args.directory}_{args.label}_{args.epochs}epochs_{args.batch}k_{neuron_nb}neurons_{args.layers}layers_bestPearsonCorr.keras'
 model_checkpoint_callback = ModelCheckpoint(
   filepath=checkpoint_file,
-  monitor=val_r2score,
+  monitor='val_r2score',
   mode='max',
   verbose=1,
   save_best_only=True)
