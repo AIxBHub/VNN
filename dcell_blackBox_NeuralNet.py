@@ -138,7 +138,7 @@ model.compile(optimizer=optimizer, loss='mean_squared_error', metrics=[r2score])
 
 # Sets a checkpoint for model to save best Pearson correlation over epochs
 checkpoint_file = f'{directory}/{args.percent}_percent/rawData_{args.directory}_{args.label}_{args.epochs}epochs_{args.batch}k_{neuron_nb}neurons_{args.layers}layers_{val_r2score:.2f.keras}'
-model_checkpoint_callback = keras.callbacks.ModelCheckpoint(
+model_checkpoint_callback = ModelCheckpoint(
   filepath=checkpoint_file,
   monitor=val_r2score,
   mode='max',
