@@ -4,7 +4,7 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras.utils import Sequence
 from keras.optimizers import Adam
-from keras.callbacks import ReduceLROnPlateau, EarlyStopping
+from keras.callbacks import ReduceLROnPlateau, EarlyStopping, ModelCheckpoint
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.metrics import accuracy_score
 import matplotlib.pyplot as plt
@@ -136,9 +136,17 @@ stopEarly = EarlyStopping(monitor='loss', patience=5)
 # Compile the model
 model.compile(optimizer=optimizer, loss='mean_squared_error', metrics=[r2score])
 
+# Sets a checkpoint for model to save best Pearson correlation over epochs
+model_checkpoint_callback = keras.callbacks.ModelCheckpoint(
+  filepath=f'{directory}/{percent}_percent/rawData_{directory}_{label}_{epochs}epochs_{batch}k_{neuron_nb}neurons_{layer}layers_{val_r2score:.2f.keras}',
+  monitor=val_r2score,
+  mode='max',
+  verbose=1,
+  save_best_only=True)
+
 #Train model
 print("Train the model using data generators")
-history = model.fit(train_data_generator, epochs=args.epochs, validation_data=val_data_generator, callbacks=[stopEarly])
+history = model.fit(train_data_generator, epochs=args.epochs, validation_data=val_data_generator, callbacks=[stopEarly, model_checkpoint_callback])
 
 # Save the history object to a file
 # with open(f'{args.directory}/training_history.pkl', 'wb') as history_file:
