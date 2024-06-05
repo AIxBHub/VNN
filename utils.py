@@ -6,7 +6,7 @@ import numpy as np
 import tensorflow.keras.backend as K
 from tensorflow.keras.callbacks import Callback
 
-
+# Returns Pearson Correlation
 def r2score(x, y):
     xx = x - K.mean(x)
     yy = y - K.mean(y)
@@ -17,7 +17,7 @@ def r2score(x, y):
     
     return dot_product / (x_norm * y_norm)
     
-
+# Builds filename structure
 def save_model_with_filename(model, neuron_nb, directory, label, percent, epochs, batch, layer):
     
     # Create the filename using the provided directory argument
@@ -26,6 +26,7 @@ def save_model_with_filename(model, neuron_nb, directory, label, percent, epochs
     # Save the model with the dynamic filename
     model.save(filename)
 
+# Builds binary matrix for input to model
 def create_binary_matrix(df, gene_col1, gene_col2):
     
     # Create a mapping of unique genes to column indices in the binary matrix
