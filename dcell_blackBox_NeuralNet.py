@@ -137,8 +137,9 @@ stopEarly = EarlyStopping(monitor='loss', patience=5)
 model.compile(optimizer=optimizer, loss='mean_squared_error', metrics=[r2score])
 
 # Sets a checkpoint for model to save best Pearson correlation over epochs
+checkpoint_file = f'{directory}/{args.percent}_percent/rawData_{args.directory}_{args.label}_{args.epochs}epochs_{args.batch}k_{neuron_nb}neurons_{args.layers}layers_{val_r2score:.2f.keras}'
 model_checkpoint_callback = keras.callbacks.ModelCheckpoint(
-  filepath=f'{directory}/{percent}_percent/rawData_{directory}_{label}_{epochs}epochs_{batch}k_{neuron_nb}neurons_{layer}layers_{val_r2score:.2f.keras}',
+  filepath=checkpoint_file,
   monitor=val_r2score,
   mode='max',
   verbose=1,
@@ -158,15 +159,10 @@ score = model.evaluate(val_data_generator)
 # Save model
 save_model_with_filename(model, neurons, batch=batch_file, directory=args.directory, label=args.label, percent=args.percent, epochs=args.epochs, layer=args.layers)
 
-# Make predictions using the trained model
+# Make predictions using the trained checkpoint model
+keras.models.load_model(checkpoint_file)
 predictions = model.predict(x_val)
 
-# # Plot the scores
-# plt.plot(history.history['loss'], label='Training Loss')
-# plt.plot(history.history['val_loss'], label='Validation Loss')
-# plt.legend()
-# plt.show()
-# plt.savefig(f'{args.directory}/{args.percent}_percent/lossVSepochs_{args.directory}_{args.label}_{batch_file}kbatch_{args.epochs}Epoch_{neurons}neurons_{args.layers}layers_plot.png')
 
 # Plot the training and validation loss
 plt.figure()
@@ -189,3 +185,13 @@ plt.title('Training and Validation Correlation by Epoch')
 plt.legend()
 plt.show()
 plt.savefig(f'{args.directory}/{args.percent}_percent/r2scoreVSepoch_{args.directory}_{args.label}_{batch_file}kbatch_{args.epochs}Epoch_{neurons}neurons_{args.layers}layers_plot.png')
+
+# Plot the predictions vs actual values
+plt.figure()
+plt.scatter(y_val, predictions, alpha=0.5)
+plt.xlabel('Actual Values')
+plt.ylabel('Predicted Values')
+plt.title('Predictions vs Actual Values')
+plt.plot([min(y_val), max(y_val)], [min(y_val), max(y_val)], 'r--')  # Diagonal line
+plt.show()
+plt.savefig(f'{args.directory}/{args.percent}_percent/predictionsVSactual_{args.directory}_{args.label}_{batch_file}kbatch_{args.epochs}Epoch_{neurons}neurons_{args.layers}layers_plot.png')
