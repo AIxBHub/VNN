@@ -1,6 +1,6 @@
 import pandas as pd
 from utils import *
-from keras.models import Sequential
+from keras.models import Sequential, load_model
 from keras.layers import Dense
 from keras.utils import Sequence
 from keras.optimizers import Adam
@@ -150,8 +150,8 @@ print("Train the model using data generators")
 history = model.fit(train_data_generator, epochs=args.epochs, validation_data=val_data_generator, callbacks=[stopEarly, model_checkpoint_callback])
 
 # Save the history object to a file
-# with open(f'{args.directory}/training_history.pkl', 'wb') as history_file:
-#     pickle.dump(history.history, history_file)
+with open(f'{args.directory}/training_history.pkl', 'wb') as history_file:
+  pickle.dump(history.history, history_file)
 
 # Evaluate the model
 score = model.evaluate(val_data_generator)
@@ -160,8 +160,8 @@ score = model.evaluate(val_data_generator)
 save_model_with_filename(model, neurons, batch=batch_file, directory=args.directory, label=args.label, percent=args.percent, epochs=args.epochs, layer=args.layers)
 
 # Make predictions using the trained checkpoint model
-keras.models.load_model(checkpoint_file)
-predictions = model.predict(x_val)
+model = load_model(checkpoint_file)
+predictions = model.predict(x_testing)
 
 
 # Plot the training and validation loss
@@ -188,10 +188,10 @@ plt.savefig(f'{args.directory}/{args.percent}_percent/r2scoreVSepoch_{args.direc
 
 # Plot the predictions vs actual values
 plt.figure()
-plt.scatter(y_val, predictions, alpha=0.5)
+plt.scatter(y_testing, predictions, alpha=0.5)
 plt.xlabel('Actual Values')
 plt.ylabel('Predicted Values')
 plt.title('Predictions vs Actual Values')
-plt.plot([min(y_val), max(y_val)], [min(y_val), max(y_val)], 'r--')  # Diagonal line
+plt.plot([min(y_testing), max(y_testing)], [min(y_testing), max(y_testing)], 'r--')  # Diagonal line
 plt.show()
 plt.savefig(f'{args.directory}/{args.percent}_percent/predictionsVSactual_{args.directory}_{args.label}_{batch_file}kbatch_{args.epochs}Epoch_{neurons}neurons_{args.layers}layers_plot.png')
