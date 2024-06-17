@@ -130,7 +130,7 @@ val_data_generator = DataGenerator(x_val, y_val, batch_size=batch_size)
 
 # Set learning rate
 learning_rate = 0.001
-optimizer = AdamW(learning_rate=learning_rate, weight_decay=0.004)
+optimizer = AdamW(learning_rate=learning_rate, decay=0.004)
 
 stopEarly = EarlyStopping(monitor='val_r2score', mode='max', patience=15)
 
