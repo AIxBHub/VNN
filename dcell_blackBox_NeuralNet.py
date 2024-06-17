@@ -25,6 +25,7 @@ parser.add_argument('--filename', type=str, required=True, help='CSV file to rea
 parser.add_argument('--percent', type=int, required=True, help='Percent of Data')
 parser.add_argument('--label', type=str, help='Output label')
 parser.add_argument('--batch', type=int, default=800, help='Batch Size')
+parser.add_argument('--optimizer', type=str, help='optimizer choice')
 args = parser.parse_args()
 
 # Load and preprocess the data
@@ -129,9 +130,9 @@ val_data_generator = DataGenerator(x_val, y_val, batch_size=batch_size)
 
 # Set learning rate
 learning_rate = 0.001
-optimizer = Adam(learning_rate=learning_rate)
+optimizer = Adam(learning_rate=learning_rate, weight_decay=0.004)
 
-stopEarly = EarlyStopping(monitor='loss', patience=5)
+stopEarly = EarlyStopping(monitor='val_r2score', mode='max', patience=15)
 
 # Compile the model
 model.compile(optimizer=optimizer, loss='mean_squared_error', metrics=[r2score])
