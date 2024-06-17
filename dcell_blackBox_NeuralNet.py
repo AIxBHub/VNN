@@ -3,7 +3,7 @@ from utils import *
 from keras.models import Sequential, load_model
 from keras.layers import Dense
 from keras.utils import Sequence
-from keras.optimizers import Adam
+from keras.optimizers import Adam, AdamW
 from keras.callbacks import ReduceLROnPlateau, EarlyStopping, ModelCheckpoint
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.metrics import accuracy_score
