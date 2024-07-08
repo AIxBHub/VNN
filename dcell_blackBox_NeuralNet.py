@@ -1,9 +1,9 @@
 import pandas as pd
 from utils import *
-from keras.models import Sequential
+from keras.models import Sequential, load_model
 from keras.layers import Dense
 from keras.utils import Sequence
-from keras.optimizers import Adam
+from keras.optimizers import Adam, AdamW
 from keras.callbacks import ReduceLROnPlateau, EarlyStopping, ModelCheckpoint
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.metrics import accuracy_score
@@ -25,6 +25,7 @@ parser.add_argument('--filename', type=str, required=True, help='CSV file to rea
 parser.add_argument('--percent', type=int, required=True, help='Percent of Data')
 parser.add_argument('--label', type=str, help='Output label')
 parser.add_argument('--batch', type=int, default=800, help='Batch Size')
+parser.add_argument('--optimizer', type=str, help='optimizer choice')
 args = parser.parse_args()
 
 # Load and preprocess the data
@@ -129,17 +130,18 @@ val_data_generator = DataGenerator(x_val, y_val, batch_size=batch_size)
 
 # Set learning rate
 learning_rate = 0.001
-optimizer = Adam(learning_rate=learning_rate)
+optimizer = Adam(learning_rate=learning_rate, decay=0.004)
 
-stopEarly = EarlyStopping(monitor='loss', patience=5)
+stopEarly = EarlyStopping(monitor='val_r2score', mode='max', patience=15)
 
 # Compile the model
 model.compile(optimizer=optimizer, loss='mean_squared_error', metrics=[r2score])
 
 # Sets a checkpoint for model to save best Pearson correlation over epochs
-model_checkpoint_callback = keras.callbacks.ModelCheckpoint(
-  filepath=f'{directory}/{percent}_percent/rawData_{directory}_{label}_{epochs}epochs_{batch}k_{neuron_nb}neurons_{layer}layers_{val_r2score:.2f.keras}',
-  monitor=val_r2score,
+checkpoint_file = f'{directory}/{args.percent}_percent/rawData_{args.directory}_{args.label}_{args.epochs}epochs_{args.batch}k_{neuron_nb}neurons_{args.layers}layers_bestPearsonCorr.keras'
+model_checkpoint_callback = ModelCheckpoint(
+  filepath=checkpoint_file,
+  monitor='val_r2score',
   mode='max',
   verbose=1,
   save_best_only=True)
@@ -149,8 +151,8 @@ print("Train the model using data generators")
 history = model.fit(train_data_generator, epochs=args.epochs, validation_data=val_data_generator, callbacks=[stopEarly, model_checkpoint_callback])
 
 # Save the history object to a file
-# with open(f'{args.directory}/training_history.pkl', 'wb') as history_file:
-#     pickle.dump(history.history, history_file)
+with open(f'{args.directory}/training_history.pkl', 'wb') as history_file:
+  pickle.dump(history.history, history_file)
 
 # Evaluate the model
 score = model.evaluate(val_data_generator)
@@ -158,15 +160,10 @@ score = model.evaluate(val_data_generator)
 # Save model
 save_model_with_filename(model, neurons, batch=batch_file, directory=args.directory, label=args.label, percent=args.percent, epochs=args.epochs, layer=args.layers)
 
-# Make predictions using the trained model
-predictions = model.predict(x_val)
+# Make predictions using the trained checkpoint model
+model = load_model(checkpoint_file)
+predictions = model.predict(x_testing)
 
-# # Plot the scores
-# plt.plot(history.history['loss'], label='Training Loss')
-# plt.plot(history.history['val_loss'], label='Validation Loss')
-# plt.legend()
-# plt.show()
-# plt.savefig(f'{args.directory}/{args.percent}_percent/lossVSepochs_{args.directory}_{args.label}_{batch_file}kbatch_{args.epochs}Epoch_{neurons}neurons_{args.layers}layers_plot.png')
 
 # Plot the training and validation loss
 plt.figure()
@@ -189,3 +186,13 @@ plt.title('Training and Validation Correlation by Epoch')
 plt.legend()
 plt.show()
 plt.savefig(f'{args.directory}/{args.percent}_percent/r2scoreVSepoch_{args.directory}_{args.label}_{batch_file}kbatch_{args.epochs}Epoch_{neurons}neurons_{args.layers}layers_plot.png')
+
+# Plot the predictions vs actual values
+plt.figure()
+plt.scatter(y_testing, predictions, alpha=0.5)
+plt.xlabel('Actual Values')
+plt.ylabel('Predicted Values')
+plt.title('Predictions vs Actual Values')
+plt.plot([min(y_testing), max(y_testing)], [min(y_testing), max(y_testing)], 'r--')  # Diagonal line
+plt.show()
+plt.savefig(f'{args.directory}/{args.percent}_percent/predictionsVSactual_{args.directory}_{args.label}_{batch_file}kbatch_{args.epochs}Epoch_{neurons}neurons_{args.layers}layers_plot.png')
