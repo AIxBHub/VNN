@@ -99,9 +99,6 @@ binary_inputs = create_binary_matrix(x_model, 'Query_allele', 'Array_allele')
 output = pd.DataFrame(y_model)
 
 print("Split the data into training and validation sets")
-# data_split_generator = split_data_generator(binary_inputs, output)
-# x_train, y_train, x_val, y_val = next(data_split_generator)
-
 x_train, x_val, y_train, y_val = train_test_split(binary_inputs, output, test_size=0.2)
 
 # Define the model architecture
@@ -109,7 +106,7 @@ model = Sequential()
 
 # Add the first layer with input dimension
 model.add(Dense(neuron_nb, activation='tanh', input_dim=x_train.shape[1]))
-#model.add(Dense(813, activation = 'relu'))
+
 # Add 10 hidden layers
 for _ in range(args.layers):        #Visualize structure
   neuron_nb //= 2
